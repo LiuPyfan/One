@@ -1,7 +1,8 @@
 package com.fantasy.pf.one.di.module;
 
 import android.app.Activity;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
+
 
 import com.fantasy.pf.one.di.scope.FragmentScope;
 
