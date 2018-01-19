@@ -1,7 +1,9 @@
-package com.fantasy.pf.one;
+package com.fantasy.pf.one.main;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.fantasy.pf.one.R;
 
 public class MainActivity extends AppCompatActivity {
 
