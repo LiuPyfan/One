@@ -31,8 +31,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     private static final String TAG = "pf";
     private OneApplication mApplication;
 
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
+//    @BindView(R.id.toolbar)
+//    Toolbar toolbar;
     public TextView tvTitle;
     // 物理键
     public boolean isBack = true;
@@ -41,9 +41,15 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public abstract void init();
 
+    public abstract int getLayout();
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setContentView(getLayout());
+        ButterKnife.bind(this);
+
         mApplication = OneApplication.getInstance();
         addActivity();
         onCreateView();
@@ -56,11 +62,16 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public void initToolbar() {
-        ButterKnife.bind(this);
-        if (toolbar != null && isBack) {
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        // 工具栏设置文字
+        if (toolbar != null) {
             tvTitle = (TextView) findViewById(R.id.tv_title);
             setSupportActionBar(toolbar);
             setTitle("");
+            toolbar.setOnMenuItemClickListener(onMenuItemClick);
+        }
+        if (isBack) {
             toolbar.setNavigationIcon(R.mipmap.return_image_gray);
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
@@ -68,7 +79,6 @@ public abstract class BaseActivity extends AppCompatActivity {
                     onBackPressed();
                 }
             });
-            toolbar.setOnMenuItemClickListener(onMenuItemClick);
         }
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);

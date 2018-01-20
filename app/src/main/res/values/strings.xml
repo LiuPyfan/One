@@ -928,4 +928,7 @@
     <string name="words_hint">文／</string>
     <string name="xiami_cannot_play">很抱歉，此歌曲已在虾米下架，暂时无法播放</string>
     <string name="your_score_hint">你的评分</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -5,6 +5,7 @@ import android.app.Activity;
 import com.fantasy.pf.one.di.module.ActivityModule;
 import com.fantasy.pf.one.di.module.AppModule;
 import com.fantasy.pf.one.di.scope.ActivityScope;
+import com.fantasy.pf.one.main.MainActivity;
 
 import dagger.Component;
 
@@ -22,5 +23,5 @@ public interface ActivityComponent {
 
     Activity getActivity();
 
-
+    void inject(MainActivity mainActivity);
 }

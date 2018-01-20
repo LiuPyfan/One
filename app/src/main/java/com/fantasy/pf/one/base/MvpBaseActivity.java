@@ -20,7 +20,7 @@ public abstract class MvpBaseActivity<T extends BasePresenter> extends BaseActiv
     @Inject
     public T presenter;
 
-    public abstract void initInject();
+    public abstract void setInject();
     // module初始化
     private ActivityModule getActivityModule() {
         return new ActivityModule(this);
@@ -38,7 +38,7 @@ public abstract class MvpBaseActivity<T extends BasePresenter> extends BaseActiv
     @Override
     public void onCreateView() {
         super.onCreateView();
-        initInject();
+        setInject();
         if (presenter != null) {
             presenter.attachView(this);
         }
