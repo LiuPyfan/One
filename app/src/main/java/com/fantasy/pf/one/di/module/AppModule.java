@@ -1,6 +1,13 @@
 package com.fantasy.pf.one.di.module;
 
 import com.fantasy.pf.one.application.OneApplication;
+import com.fantasy.pf.one.model.DataManagerModel;
+import com.fantasy.pf.one.model.db.DBHelper;
+import com.fantasy.pf.one.model.db.DBHelperImpl;
+import com.fantasy.pf.one.model.http.HttpHelper;
+import com.fantasy.pf.one.model.http.HttpHelperImpl;
+import com.fantasy.pf.one.model.prefs.PreferencesHelper;
+import com.fantasy.pf.one.model.prefs.PreferencesHelperImpl;
 
 import javax.inject.Singleton;
 
@@ -30,4 +37,36 @@ public class AppModule {
     OneApplication provideOneApplicaiton(){
         return mOneApplication;
     }
+
+    /**
+     * dagger获取AppComponent里
+     实例化sp,db,http的helper类
+     */
+
+
+    @Provides
+    @Singleton
+    HttpHelper provideHttpHelper(HttpHelperImpl httpHelper) {
+        return httpHelper;
+    }
+    // db
+    @Provides
+    @Singleton
+    DBHelper provideDBHelper(DBHelperImpl dbHelper) {
+        return dbHelper;
+    }
+
+    @Provides
+    @Singleton
+    PreferencesHelper providePreferencesHelper(PreferencesHelperImpl preferencesHelper) {
+        return preferencesHelper;
+    }
+
+    @Provides
+    @Singleton
+    DataManagerModel provideDataManagerModel(HttpHelperImpl httpHelper, DBHelperImpl dbHelper,
+                                             PreferencesHelperImpl preferencesHelper) {
+        return new DataManagerModel(httpHelper, dbHelper, preferencesHelper);
+    }
+
 }
