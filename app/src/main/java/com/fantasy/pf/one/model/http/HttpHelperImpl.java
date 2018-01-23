@@ -25,6 +25,6 @@ public class HttpHelperImpl implements HttpHelper {
 
     @Override
     public Flowable<OneIdBean> fetchOneIdList() {
-        return null;
+        return mOneApis.getOneIdList();
     }
 }

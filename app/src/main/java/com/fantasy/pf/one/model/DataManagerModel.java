@@ -28,6 +28,6 @@ public class DataManagerModel implements HttpHelper,DBHelper,PreferencesHelper {
 
     @Override
     public Flowable<OneIdBean> fetchOneIdList() {
-        return null;
+        return mHttpHelper.fetchOneIdList();
     }
 }

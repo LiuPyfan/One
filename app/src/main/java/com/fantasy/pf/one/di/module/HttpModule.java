@@ -25,6 +25,8 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.fantasy.pf.one.utils.Constants.CACHE_SIZE;
+
 /**
  * When I wrote this, only God and I understood what I was doing
  * Now, God only knows
@@ -56,7 +58,7 @@ public class HttpModule {
             builder.addInterceptor(loggingInterceptor);
         }
         File cacheFile = new File(Constants.PATH_CACHE);
-        Cache cache = new Cache(cacheFile, Constants.CACHE_SIZE);
+        Cache cache = new Cache(cacheFile, CACHE_SIZE);
 
         Interceptor cacheInterceptor = new Interceptor() {
             @Override

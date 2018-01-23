@@ -15,7 +15,10 @@ import com.fantasy.pf.one.one.mvp.OnePresenter;
  * A simple {@link Fragment} subclass.
  */
 public class OneFragment extends MvpBaseFragment<OnePresenter> {
-
+    @Override
+    protected void initInject() {
+        getFragmentComponent().inject(this);
+    }
 
     @Override
     public View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -25,12 +28,10 @@ public class OneFragment extends MvpBaseFragment<OnePresenter> {
 
     @Override
     public void init() {
+        presenter.getOneIdList();
 
     }
 
 
-    @Override
-    protected void initInject() {
 
-    }
 }

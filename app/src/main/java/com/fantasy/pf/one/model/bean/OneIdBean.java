@@ -13,8 +13,10 @@ public class OneIdBean {
     private int res;
     private List<String> data;
 
+
     public OneIdBean() {
     }
+
 
     public OneIdBean(int res, List<String> data) {
         this.res = res;
@@ -32,9 +34,15 @@ public class OneIdBean {
     public List<String> getData() {
         return data;
     }
-
     public void setData(List<String> data) {
         this.data = data;
+    }
+    @Override
+    public String toString() {
+        return "OneIdBean{" +
+                "res=" + res +
+                ", data=" + data +
+                '}';
     }
 
 }

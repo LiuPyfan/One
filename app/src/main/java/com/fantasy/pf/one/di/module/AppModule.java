@@ -42,8 +42,6 @@ public class AppModule {
      * dagger获取AppComponent里
      实例化sp,db,http的helper类
      */
-
-
     @Provides
     @Singleton
     HttpHelper provideHttpHelper(HttpHelperImpl httpHelper) {

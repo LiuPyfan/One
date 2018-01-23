@@ -4,6 +4,7 @@ import android.app.Activity;
 
 import com.fantasy.pf.one.di.module.FragmentModule;
 import com.fantasy.pf.one.di.scope.FragmentScope;
+import com.fantasy.pf.one.one.OneFragment;
 
 import dagger.Component;
 
@@ -17,4 +18,6 @@ import dagger.Component;
 @Component(dependencies = AppComponent.class,modules = FragmentModule.class)
 public interface FragmentComponent {
     Activity getActivity();
+
+    void inject(OneFragment oneFragment);
 }

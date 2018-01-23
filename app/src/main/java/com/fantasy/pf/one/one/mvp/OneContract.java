@@ -2,6 +2,7 @@ package com.fantasy.pf.one.one.mvp;
 
 import com.fantasy.pf.one.base.BasePresenter;
 import com.fantasy.pf.one.base.BaseView;
+import com.fantasy.pf.one.model.DataManagerModel;
 
 /**
  * When I wrote this, only God and I understood what I was doing
@@ -12,11 +13,12 @@ import com.fantasy.pf.one.base.BaseView;
 
 public class OneContract {
 
+
     interface View extends BaseView{
 
     }
 
     interface Presenter extends BasePresenter<View>{
-
+        void  getOneIdList();
     }
 }
