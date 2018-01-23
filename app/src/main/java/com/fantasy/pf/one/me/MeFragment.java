@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.fantasy.pf.one.R;
 import com.fantasy.pf.one.base.MvpBaseFragment;
@@ -30,5 +31,10 @@ public class MeFragment extends MvpBaseFragment {
     @Override
     protected void initInject() {
 
+    }
+
+    @Override
+    public void showErrorMsg(String msg) {
+        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
     }
 }

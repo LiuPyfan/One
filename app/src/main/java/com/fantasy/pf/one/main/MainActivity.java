@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.FrameLayout;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.fantasy.pf.one.R;
 import com.fantasy.pf.one.all.AllFragment;
@@ -92,4 +93,8 @@ public class MainActivity extends MvpBaseActivity<MainPresenter> implements Main
         }
     }
 
+    @Override
+    public void showErrorMsg(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    }
 }

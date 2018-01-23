@@ -5,6 +5,7 @@ import android.util.Log;
 import com.fantasy.pf.one.base.RxPresenter;
 import com.fantasy.pf.one.model.DataManagerModel;
 import com.fantasy.pf.one.model.bean.OneIdBean;
+import com.fantasy.pf.one.model.http.CommonSubscriber;
 import com.fantasy.pf.one.utils.RxUtil;
 
 import org.reactivestreams.Publisher;
@@ -46,24 +47,37 @@ public class OnePresenter extends RxPresenter<OneContract.View> implements OneCo
                                 List<String> strings = oneIdBean.getData();
                                 return Flowable.fromIterable(strings);//可以接收一个 Iterable 容器作为输入,每次发射一个元素
                             }
-                        })
-                        .subscribeWith(new ResourceSubscriber<String>(){
+                        })// v1.2 泛型 并支持view的操作
+                        .subscribeWith(new CommonSubscriber<String>(view){
 
                             @Override
                             public void onNext(String s) {
                                 Log.d("OnePresenter", s);
                             }
 
-                            @Override
-                            public void onError(Throwable t) {
-                                Log.d(TAG, t.getMessage());
-                            }
-
-                            @Override
-                            public void onComplete() {
-
-                            }
                         })
+
+
+                        // v1.1没封装ResourceSubscriber，不支持泛型
+//                        .subscribeWith(new ResourceSubscriber<String>(){// 为了在构建stream消费者时有更少的内部状态,以提供资源跟踪支持,可在外部dispose()方法cancelled(取消)或disposed(丢弃)
+//
+//                            @Override
+//                            public void onNext(String s) {
+//                                Log.d("OnePresenter", s);
+//                            }
+//
+//                            @Override
+//                            public void onError(Throwable t) {
+//                                Log.d(TAG, t.getMessage());
+//                            }
+//
+//                            @Override
+//                            public void onComplete() {
+//
+//                            }
+//                        })
+
+                // v1.0
 //                        .map(new Function<OneIdBean, OneIdBean>() { //就变换 Flowable 然后返回一个指定类型的 Flowable 对象(可以返回任意类型的 Flowable)
 //                            @Override
 //                            public OneIdBean apply(OneIdBean oneIdBean) throws Exception {

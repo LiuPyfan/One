@@ -8,4 +8,6 @@ package com.fantasy.pf.one.base;
  */
 
 public interface BaseView {
+
+    void showErrorMsg(String msg);
 }
