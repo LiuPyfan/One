@@ -2,6 +2,7 @@ package com.fantasy.pf.one.di.module;
 
 import com.fantasy.pf.one.BuildConfig;
 import com.fantasy.pf.one.di.qualifier.OneUrl;
+import com.fantasy.pf.one.model.http.CacheInterceptor;
 import com.fantasy.pf.one.model.http.api.OneApis;
 import com.fantasy.pf.one.utils.Constants;
 import com.fantasy.pf.one.utils.Utils;
@@ -57,42 +58,45 @@ public class HttpModule {
             loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
             builder.addInterceptor(loggingInterceptor);
         }
-        File cacheFile = new File(Constants.PATH_CACHE);
-        Cache cache = new Cache(cacheFile, CACHE_SIZE);
-
-        Interceptor cacheInterceptor = new Interceptor() {
-            @Override
-            public Response intercept(Chain chain) throws IOException {
-                Request request = chain.request();
-                if (!Utils.isNetworkConnected()) {
-                    request = request.newBuilder()
-                            .cacheControl(CacheControl.FORCE_CACHE)
-                            .build();
-                }
-                Response response = chain.proceed(request);
-                if (Utils.isNetworkConnected()) {
-                    int maxAge = 0;
-                    //有网络时，不缓存，最大保存时长为0
-                    response.newBuilder()
-                            .header("Cache-Control", "public, max-age=" + maxAge)
-                            .removeHeader("Pragma")
-                            .build();
-                } else {
-                    //无网络时，超时为4周
-                    int maxStale = 60 * 60 * 24 * 28;
-                    response.newBuilder()
-                            .header("Cache-Control", "public, only-if-cache, max-stale=" + maxStale)
-                            .removeHeader("Pragma")
-                            .build();
-
-                }
-
-                return response;
-            }
-        };
+//        File cacheFile = new File(Constants.PATH_CACHE);
+//        Cache cache = new Cache(cacheFile, CACHE_SIZE);
+//
+//        Interceptor cacheInterceptor = new Interceptor() {
+//            @Override
+//            public Response intercept(Chain chain) throws IOException {
+//                Request request = chain.request();
+//                if (!Utils.isNetworkConnected()) {
+//                    request = request.newBuilder()
+//                            .cacheControl(CacheControl.FORCE_CACHE)
+//                            .build();
+//                }
+//                Response response = chain.proceed(request);
+//                if (Utils.isNetworkConnected()) {
+//                    int maxAge = 0;
+//                    //有网络时，不缓存，最大保存时长为0
+//                    response.newBuilder()
+//                            .header("Cache-Control", "public, max-age=" + maxAge)
+//                            .removeHeader("Pragma")
+//                            .build();
+//                } else {
+//                    //无网络时，超时为4周
+//                    int maxStale = 60 * 60 * 24 * 28;
+//                    response.newBuilder()
+//                            .header("Cache-Control", "public, only-if-cache, max-stale=" + maxStale)
+//                            .removeHeader("Pragma")
+//                            .build();
+//
+//                }
+//
+//                return response;
+//            }
+//        };
+        Cache cache = new Cache(new File(Constants.PATH_CACHE), CACHE_SIZE);
         //设置缓存
-        builder.addNetworkInterceptor(cacheInterceptor);
-        builder.addInterceptor(cacheInterceptor);
+//        builder.addNetworkInterceptor(cacheInterceptor);
+//        builder.addInterceptor(cacheInterceptor);
+        builder.addInterceptor(new CacheInterceptor());
+        builder.addNetworkInterceptor(new CacheInterceptor());
         builder.cache(cache);
         //设置超时
         builder.connectTimeout(10, TimeUnit.SECONDS);
