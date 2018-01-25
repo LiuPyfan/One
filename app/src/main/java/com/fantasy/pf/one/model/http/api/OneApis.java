@@ -3,6 +3,8 @@ package com.fantasy.pf.one.model.http.api;
 
 
 import com.fantasy.pf.one.model.bean.OneIdBean;
+import com.fantasy.pf.one.model.bean.OneListBean;
+import com.fantasy.pf.one.model.http.response.MyHttpResponse;
 
 import io.reactivex.Flowable;
 import retrofit2.http.GET;
@@ -22,7 +24,14 @@ public interface OneApis {
 
     //获取最新 IdList
     @GET("idlist")
-    Flowable<OneIdBean> getOneIdList();
+    Flowable<OneIdBean> getOneId();
+    //    Flowable<OneIdBean> getOneIdList();
+
+
+    //获取 onelist
+    @GET("{id}/0")
+    Flowable<MyHttpResponse<OneListBean>> getOneList(@Path("id") String id);
+
 
 
 //    String HOST = "http://v3.wufazhuce.com:8000/api/";

@@ -5,7 +5,9 @@ import android.util.Log;
 import com.fantasy.pf.one.base.RxPresenter;
 import com.fantasy.pf.one.model.DataManagerModel;
 import com.fantasy.pf.one.model.bean.OneIdBean;
+import com.fantasy.pf.one.model.bean.OneListBean;
 import com.fantasy.pf.one.model.http.CommonSubscriber;
+import com.fantasy.pf.one.model.http.response.MyHttpResponse;
 import com.fantasy.pf.one.utils.RxUtil;
 
 import org.reactivestreams.Publisher;
@@ -39,20 +41,21 @@ public class OnePresenter extends RxPresenter<OneContract.View> implements OneCo
     @Override
     public void getOneIdList() {
         addSubscribe(
-                mDataManagerModel.fetchOneIdList()
+                mDataManagerModel.fetchOneId()
                         .compose(RxUtil.<OneIdBean>rxSchedulerHelper())
                         .flatMap(new Function<OneIdBean, Publisher<String>>() {//flatMap 返回的是一个 Flowable
                             @Override
                             public Publisher<String> apply(OneIdBean oneIdBean) throws Exception {
                                 List<String> strings = oneIdBean.getData();
-                                return Flowable.fromIterable(strings);//可以接收一个 Iterable 容器作为输入,每次发射一个元素
+                                //return Flowable.fromIterable(strings);//可以接收一个 Iterable 容器作为输入,每次发射一个元素
+                                return Flowable.just(strings.get(0));// 拼接后的第一条的日期
                             }
                         })// v1.2 泛型 并支持view的操作
                         .subscribeWith(new CommonSubscriber<String>(view){
 
                             @Override
                             public void onNext(String s) {
-                                Log.d("OnePresenter", s);
+                                getOneList(s);
                             }
 
                         })
@@ -100,6 +103,25 @@ public class OnePresenter extends RxPresenter<OneContract.View> implements OneCo
 //                        )
 
         );
+    }
 
+
+    private void getOneList(String s){
+        addSubscribe(mDataManagerModel.getOneList(s)
+                    .compose(RxUtil.<MyHttpResponse<OneListBean>>rxSchedulerHelper())
+                    .flatMap(new Function<MyHttpResponse<OneListBean>, Publisher<String>>() {
+                        @Override
+                        public Publisher<String> apply(MyHttpResponse<OneListBean> listBean) throws Exception {
+                            return Flowable.just(listBean.getData().getDate());
+                        }
+                    })
+                    .subscribeWith(new CommonSubscriber<String>(view){
+
+                        @Override
+                        public void onNext(String s) {
+                            Log.d("aaa", s);
+                        }
+                    })
+        );
     }
 }

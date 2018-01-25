@@ -107,6 +107,14 @@ public class HttpModule {
         return builder.build();
     }
 
+    /**类名 HttpModule
+     * @date 创建时间 2018/1/24 下午5:08
+     * @author pforlove
+     * 注解 @Provides
+     * @description   retrofit 网络类依赖了retrofit,ok
+     * @param builder,client
+     */
+
     @Provides
     @Singleton
     @OneUrl

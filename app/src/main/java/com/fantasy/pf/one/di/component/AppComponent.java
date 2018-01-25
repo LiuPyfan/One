@@ -19,8 +19,9 @@ import dagger.Component;
  * let none that wait on thee be ashamed
  */
 @Singleton
-@Component(modules = {AppModule.class, HttpModule.class})
+@Component(modules = {AppModule.class, HttpModule.class})// 指明在哪个包里找依赖
 public interface AppComponent {
+    // 从上面指定的依赖库AppModule.class中取得的对象 返回值为对象类
     OneApplication getContext();
 
     DataManagerModel getDataManagerModel();

@@ -39,7 +39,8 @@ public abstract class CommonSubscriber<T> extends ResourceSubscriber<T> {
 
     @Override
     public void onError(Throwable t) {
-
+        if (mBaseView == null) return;
+        mBaseView.showErrorMsg(t.getMessage());
     }
 
     @Override

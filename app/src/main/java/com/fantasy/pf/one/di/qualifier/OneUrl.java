@@ -11,6 +11,8 @@ import javax.inject.Qualifier;
  * Now, God only knows
  * Created by pf on 2018/1/22.
  * let none that wait on thee be ashamed
+ *
+ * @Qualifier 限定构造函数对象里的不同参数
  */
 @Qualifier
 @Documented

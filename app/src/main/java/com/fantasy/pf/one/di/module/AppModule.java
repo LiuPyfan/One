@@ -20,6 +20,7 @@ import dagger.Provides;
  * Created by pf on 2018/1/18.
  * let none that wait on thee be ashamed
  *
+ * 管理所有的依赖 为之后获取对象准备
  * module 提供app对象
  * Singleton 单例，防止引用两个
  */

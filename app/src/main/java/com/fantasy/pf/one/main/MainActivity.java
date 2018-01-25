@@ -33,6 +33,7 @@ public class MainActivity extends MvpBaseActivity<MainPresenter> implements Main
 
     @Override
     public void setInject() {
+        // 上一步再MvpBaseActivity
         getActivityComponent().inject(this);
     }
 

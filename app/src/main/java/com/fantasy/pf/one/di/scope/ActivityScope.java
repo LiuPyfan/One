@@ -10,6 +10,7 @@ import javax.inject.Scope;
  * Now, God only knows
  * Created by pf on 2018/1/18.
  * let none that wait on thee be ashamed
+ *
  */
 @Scope
 @Retention(RetentionPolicy.RUNTIME)

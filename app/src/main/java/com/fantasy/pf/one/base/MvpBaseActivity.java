@@ -13,6 +13,7 @@ import javax.inject.Inject;
  * Now, God only knows
  * Created by pf on 2018/1/19.
  * let none that wait on thee be ashamed
+ * 经过ActivityModule->ActivityComponent 编译后 在getActivityComponent()生成
  */
 
 public abstract class MvpBaseActivity<T extends BasePresenter> extends BaseActivity implements BaseView {
@@ -28,10 +29,11 @@ public abstract class MvpBaseActivity<T extends BasePresenter> extends BaseActiv
 
 
     public ActivityComponent getActivityComponent(){
-        return DaggerActivityComponent.builder()
+        return DaggerActivityComponent.builder() // build后的自动生成的类
                 .appComponent(OneApplication.getAppComponent())
                 .activityModule(getActivityModule())
                 .build();
+        // 下一步再子类中 inject(this);
     }
 
 

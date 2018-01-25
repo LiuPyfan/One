@@ -1,8 +1,10 @@
 package com.fantasy.pf.one.model;
 
 import com.fantasy.pf.one.model.bean.OneIdBean;
+import com.fantasy.pf.one.model.bean.OneListBean;
 import com.fantasy.pf.one.model.db.DBHelper;
 import com.fantasy.pf.one.model.http.HttpHelper;
+import com.fantasy.pf.one.model.http.response.MyHttpResponse;
 import com.fantasy.pf.one.model.prefs.PreferencesHelper;
 
 import io.reactivex.Flowable;
@@ -27,7 +29,19 @@ public class DataManagerModel implements HttpHelper,DBHelper,PreferencesHelper {
     }
 
     @Override
-    public Flowable<OneIdBean> fetchOneIdList() {
-        return mHttpHelper.fetchOneIdList();
+    public Flowable<OneIdBean> fetchOneId() {
+        return mHttpHelper.fetchOneId();
     }
+
+    @Override
+    public Flowable<MyHttpResponse<OneListBean>> getOneList(String id) {
+        return mHttpHelper.getOneList(id);
+    }
+
+//    @Override
+//    public Flowable<OneIdBean> fetchOneIdList() {
+//        return mHttpHelper.fetchOneIdList();
+//    }
+
+
 }
