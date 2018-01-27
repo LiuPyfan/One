@@ -38,30 +38,30 @@ public class OnePresenter extends RxPresenter<OneContract.View> implements OneCo
         mDataManagerModel = dataManagerModel;
     }
 
-    @Override
-    public void getOneIdList() {
-        addSubscribe(
-                mDataManagerModel.fetchOneId()
-                        .compose(RxUtil.<OneIdBean>rxSchedulerHelper())
-                        .flatMap(new Function<OneIdBean, Publisher<String>>() {//flatMap 返回的是一个 Flowable
-                            @Override
-                            public Publisher<String> apply(OneIdBean oneIdBean) throws Exception {
-                                List<String> strings = oneIdBean.getData();
-                                //return Flowable.fromIterable(strings);//可以接收一个 Iterable 容器作为输入,每次发射一个元素
-                                return Flowable.just(strings.get(0));// 拼接后的第一条的日期
-                            }
-                        })// v1.2 泛型 并支持view的操作
-                        .subscribeWith(new CommonSubscriber<String>(view){
+//    @Override
+//    public void getOneIdList() {
+//        addSubscribe(
+//                mDataManagerModel.fetchOneId()
+//                        .compose(RxUtil.<OneIdBean>rxSchedulerHelper())
+//                        .flatMap(new Function<OneIdBean, Publisher<String>>() {//flatMap 返回的是一个 Flowable
+//                            @Override
+//                            public Publisher<String> apply(OneIdBean oneIdBean) throws Exception {
+//                                List<String> strings = oneIdBean.getData();
+//                                //return Flowable.fromIterable(strings);//可以接收一个 Iterable 容器作为输入,每次发射一个元素
+//                                return Flowable.just(strings.get(0));// 拼接后的第一条的日期
+//                            }
+//                        })// v1.2 泛型 并支持view的操作
+//                        .subscribeWith(new CommonSubscriber<String>(view){
+//
+//                            @Override
+//                            public void onNext(String s) {
+//                                getOneList(s);
+//                            }
+//
+//                        })
 
-                            @Override
-                            public void onNext(String s) {
-                                getOneList(s);
-                            }
 
-                        })
-
-
-                        // v1.1没封装ResourceSubscriber，不支持泛型
+    // v1.1没封装ResourceSubscriber，不支持泛型
 //                        .subscribeWith(new ResourceSubscriber<String>(){// 为了在构建stream消费者时有更少的内部状态,以提供资源跟踪支持,可在外部dispose()方法cancelled(取消)或disposed(丢弃)
 //
 //                            @Override
@@ -80,7 +80,7 @@ public class OnePresenter extends RxPresenter<OneContract.View> implements OneCo
 //                            }
 //                        })
 
-                // v1.0
+    // v1.0
 //                        .map(new Function<OneIdBean, OneIdBean>() { //就变换 Flowable 然后返回一个指定类型的 Flowable 对象(可以返回任意类型的 Flowable)
 //                            @Override
 //                            public OneIdBean apply(OneIdBean oneIdBean) throws Exception {
@@ -102,26 +102,71 @@ public class OnePresenter extends RxPresenter<OneContract.View> implements OneCo
 //                                   }
 //                        )
 
+
+//        );
+//    }
+
+
+//    private void getOneList(String s){
+//        addSubscribe(mDataManagerModel.getOneList(s)
+//                    .compose(RxUtil.<MyHttpResponse<OneListBean>>rxSchedulerHelper())
+//                    .flatMap(new Function<MyHttpResponse<OneListBean>, Publisher<String>>() {
+//                        @Override
+//                        public Publisher<String> apply(MyHttpResponse<OneListBean> listBean) throws Exception {
+//                            return Flowable.just(listBean.getData().getDate());
+//                        }
+//                    })
+//                    .subscribeWith(new CommonSubscriber<String>(view){
+//
+//                        @Override
+//                        public void onNext(String s) {
+//                            Log.d("aaa", s);
+//                        }
+//                    })
+//        );
+//    }
+
+    @Override
+    public void getOneList(final LoadOneListData listData) {
+        addSubscribe(mDataManagerModel.fetchOneId()
+                .compose(RxUtil.<OneIdBean>rxSchedulerHelper())
+                .flatMap(new Function<OneIdBean, Publisher<String>>() {
+                    @Override
+                    public Publisher<String> apply(OneIdBean oneIdBean) throws Exception {
+                        List<String> strings = oneIdBean.getData();
+                        return Flowable.just(strings.get(0));// 拼接后的第一条的日期
+                    }
+                })
+                .subscribeWith(new CommonSubscriber<String>(view) {
+
+                    @Override
+                    public void onNext(String id) {
+                        getOneListById(id, listData);
+                    }
+                })
         );
     }
 
 
-    private void getOneList(String s){
-        addSubscribe(mDataManagerModel.getOneList(s)
-                    .compose(RxUtil.<MyHttpResponse<OneListBean>>rxSchedulerHelper())
-                    .flatMap(new Function<MyHttpResponse<OneListBean>, Publisher<String>>() {
-                        @Override
-                        public Publisher<String> apply(MyHttpResponse<OneListBean> listBean) throws Exception {
-                            return Flowable.just(listBean.getData().getDate());
-                        }
-                    })
-                    .subscribeWith(new CommonSubscriber<String>(view){
+    private void getOneListById(final String id, final LoadOneListData loadOneListData) {
 
-                        @Override
-                        public void onNext(String s) {
-                            Log.d("aaa", s);
-                        }
-                    })
+        addSubscribe(mDataManagerModel.getOneList(id)
+                .compose(RxUtil.<MyHttpResponse<OneListBean>>rxSchedulerHelper())
+                .flatMap(new Function<MyHttpResponse<OneListBean>, Publisher<OneListBean>>() {
+                    @Override
+                    public Publisher<OneListBean> apply(MyHttpResponse<OneListBean> listBean) throws Exception {
+                        return Flowable.just(listBean.getData());
+                    }
+                })
+                .subscribeWith(new CommonSubscriber<OneListBean>(view) {
+
+                    @Override
+                    public void onNext(OneListBean oneListBean) {
+                        loadOneListData.onSuccess(oneListBean);
+
+                    }
+                })
         );
     }
+
 }

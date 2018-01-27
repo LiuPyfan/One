@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/line_color"
-    tools:context="com.fantasy.pf.one.main.MainActivity">
+    tools:context=".main.MainActivity">
 
     <include
         android:id="@+id/appbar"
-        layout="@layout/toolbar"/>
+        layout="@layout/toolbar" />
+
     <View
         android:id="@+id/line1"
         style="@style/view_line"
@@ -19,19 +19,21 @@
         android:id="@+id/frame_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/line2"
-        android:layout_below="@+id/line1" />
+        android:layout_above="@id/line2"
+        android:layout_below="@id/line1"
+         />
 
-        <View
-            android:id="@+id/line2"
-            style="@style/view_line"
-            android:layout_above="@+id/radio_group" />
+    <View
+        android:id="@+id/line2"
+        style="@style/view_line"
+        android:layout_above="@+id/radio_group" />
 
     <RadioGroup
         android:id="@+id/radio_group"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_53_y"
+        android:layout_height="@dimen/dp_48_y"
         android:layout_alignParentBottom="true"
+        android:background="@android:color/white"
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingLeft="@dimen/dp_20_x"
@@ -51,9 +53,5 @@
             android:id="@+id/rb_me"
             style="@style/main_rb"
             android:drawableTop="@drawable/rb_me" />
-
-
     </RadioGroup>
-
-
 </RelativeLayout>

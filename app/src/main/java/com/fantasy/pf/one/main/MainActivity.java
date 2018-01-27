@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.FrameLayout;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
@@ -24,12 +25,16 @@ public class MainActivity extends MvpBaseActivity<MainPresenter> implements Main
     FrameLayout frameContent;
     @BindView(R.id.radio_group)
     RadioGroup radioGroup;
+    @BindView(R.id.rb_one)
+    RadioButton rbOne;
+    @BindView(R.id.rb_all)
+    RadioButton rbAll;
+    @BindView(R.id.rb_me)
+    RadioButton rbMe;
     private Fragment mCurrentFragment;
     private OneFragment mOneFragment;
     private AllFragment mAllFragment;
     private MeFragment mMeFragment;
-
-
 
     @Override
     public void setInject() {

@@ -3,6 +3,7 @@ package com.fantasy.pf.one.one.mvp;
 import com.fantasy.pf.one.base.BasePresenter;
 import com.fantasy.pf.one.base.BaseView;
 import com.fantasy.pf.one.model.DataManagerModel;
+import com.fantasy.pf.one.model.bean.OneListBean;
 
 /**
  * When I wrote this, only God and I understood what I was doing
@@ -19,6 +20,9 @@ public class OneContract {
     }
 
     interface Presenter extends BasePresenter<View>{
-        void  getOneIdList();
+//        void  getOneIdList();
+        void getOneList(LoadOneListData listData);
     }
+
+
 }

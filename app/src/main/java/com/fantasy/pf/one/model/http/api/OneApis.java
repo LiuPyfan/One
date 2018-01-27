@@ -22,7 +22,7 @@ public interface OneApis {
 
 
 
-    //获取最新 IdList
+    //获取最新 idList
     @GET("idlist")
     Flowable<OneIdBean> getOneId();
     //    Flowable<OneIdBean> getOneIdList();

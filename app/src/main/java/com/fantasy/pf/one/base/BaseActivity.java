@@ -31,8 +31,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     private static final String TAG = "pf";
     private OneApplication mApplication;
 
-//    @BindView(R.id.toolbar)
-//    Toolbar toolbar;
     public TextView tvTitle;
     // 物理键
     public boolean isBack = true;
