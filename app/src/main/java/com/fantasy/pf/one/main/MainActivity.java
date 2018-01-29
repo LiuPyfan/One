@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -18,6 +19,7 @@ import com.fantasy.pf.one.me.MeFragment;
 import com.fantasy.pf.one.one.OneFragment;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class MainActivity extends MvpBaseActivity<MainPresenter> implements MainContract.View, RadioGroup.OnCheckedChangeListener {
 
@@ -35,6 +37,8 @@ public class MainActivity extends MvpBaseActivity<MainPresenter> implements Main
     private OneFragment mOneFragment;
     private AllFragment mAllFragment;
     private MeFragment mMeFragment;
+
+    private boolean mRadioChanged;
 
     @Override
     public void setInject() {
@@ -58,6 +62,7 @@ public class MainActivity extends MvpBaseActivity<MainPresenter> implements Main
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
+        mRadioChanged = true;
         presenter.switchNavView(checkedId);
     }
 
@@ -103,4 +108,22 @@ public class MainActivity extends MvpBaseActivity<MainPresenter> implements Main
     public void showErrorMsg(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
+
+    @OnClick({R.id.rb_one,R.id.rb_all,R.id.rb_me})
+    public void onViewClicked(View view){
+        if (!mRadioChanged){
+            switch (view.getId()){
+                case R.id.rb_one:
+                    mOneFragment.scrollToTop();
+                    break;
+                case R.id.rb_all:
+                    break;
+                case R.id.rb_me:
+                    break;
+            }
+        }
+
+        mRadioChanged = false;
+    }
+
 }

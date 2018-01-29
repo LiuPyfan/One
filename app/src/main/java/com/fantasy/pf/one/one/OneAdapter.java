@@ -41,9 +41,22 @@ public class OneAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         CATEGORY_RADIO
     }
 
+    public OneAdapter(Context context) {
+        mContext = context;
+    }
+
     public OneAdapter(OneListBean oneListBean, Context context) {
         mOneListBean = oneListBean;
         mContext = context;
+    }
+
+    public void addOneListData(OneListBean oneListBean,boolean isFirst){
+        if (isFirst){
+            mOneListBean = oneListBean;
+        }else {
+            mOneListBean.getContent_list().addAll(oneListBean.getContent_list());
+        }
+        notifyDataSetChanged();
     }
 
     @Override
@@ -125,6 +138,9 @@ public class OneAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             holder.ivCoverBg.setVisibility(View.VISIBLE);
             holder.tvVolume.setText(mContentListBean.getVolume());
             holder.tvTitle.setText(mContentListBean.getTitle());
+
+            holder.tvTitle2.setText("");
+
             holder.tvLikeNum.setText(String.valueOf(mContentListBean.getLikeCount()));
             holder.tvUserName.setText(mContentListBean.getAuthor().getUserName());
             Utils.displayImage(mContext, mContentListBean.getImgUrl(), holder.ivCover);
@@ -160,6 +176,11 @@ public class OneAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             }
             holder.mTvCategory.setText(mContentListBean.getTitle() + " | " + mContentListBean.getPic_info());
             holder.mTvUserName.setText(mContentListBean.getWords_info().trim());
+            // 是否显示head的分割线
+            ((OneReportedViewHolder) holder).viewLine.setVisibility(position == 0 ? View.GONE :
+                    View.VISIBLE);
+
+
         } else {
             holder.mTvCategory.setText(String.format(mContext.getString(R.string.category),
                     mContentListBean.getShareList().getWx().getTitle().split("\\|")[0].trim()));
@@ -181,7 +202,7 @@ public class OneAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public int getItemCount() {
 
-        return mOneListBean.getContent_list().size() > 0 && mOneListBean == null ? 0 : mOneListBean.getContent_list().size();
+        return mOneListBean == null ? 0 : mOneListBean.getContent_list().size();
     }
 
     class OneViewHolder extends RecyclerView.ViewHolder {
@@ -235,6 +256,8 @@ public class OneAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         @BindView(R.id.iv_cover_illustration)
         ImageView ivCoverIllustration;
+        @BindView(R.id.view_line)
+        View viewLine;
 
         public OneReportedViewHolder(View itemView) {
             super(itemView);

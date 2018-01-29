@@ -126,47 +126,59 @@ public class OnePresenter extends RxPresenter<OneContract.View> implements OneCo
 //        );
 //    }
 
+    //    @Override
+//    public void getOneList(final LoadOneListData listData) {
     @Override
-    public void getOneList(final LoadOneListData listData) {
+    public void loadOneList(final int page) {
+        view.showRefresh();
         addSubscribe(mDataManagerModel.fetchOneId()
                 .compose(RxUtil.<OneIdBean>rxSchedulerHelper())
                 .flatMap(new Function<OneIdBean, Publisher<String>>() {
                     @Override
                     public Publisher<String> apply(OneIdBean oneIdBean) throws Exception {
                         List<String> strings = oneIdBean.getData();
-                        return Flowable.just(strings.get(0));// 拼接后的第一条的日期
+                        return Flowable.just(strings.get(page));// 拼接后的第一条的日期
                     }
                 })
                 .subscribeWith(new CommonSubscriber<String>(view) {
 
                     @Override
                     public void onNext(String id) {
-                        getOneListById(id, listData);
+                        getOneListById(id);
                     }
                 })
         );
     }
 
 
-    private void getOneListById(final String id, final LoadOneListData loadOneListData) {
+    //    private void getOneListById(final String id, final LoadOneListData loadOneListData) {
+    private void getOneListById(final String id) {
 
         addSubscribe(mDataManagerModel.getOneList(id)
-                .compose(RxUtil.<MyHttpResponse<OneListBean>>rxSchedulerHelper())
-                .flatMap(new Function<MyHttpResponse<OneListBean>, Publisher<OneListBean>>() {
-                    @Override
-                    public Publisher<OneListBean> apply(MyHttpResponse<OneListBean> listBean) throws Exception {
-                        return Flowable.just(listBean.getData());
-                    }
-                })
-                .subscribeWith(new CommonSubscriber<OneListBean>(view) {
+                        .compose(RxUtil.<MyHttpResponse<OneListBean>>rxSchedulerHelper())
+                        .flatMap(new Function<MyHttpResponse<OneListBean>, Publisher<OneListBean>>() {
+                            @Override
+                            public Publisher<OneListBean> apply(MyHttpResponse<OneListBean> listBean) throws Exception {
+                                return Flowable.just(listBean.getData());
+                            }
+                        })
+                        .subscribeWith(new CommonSubscriber<OneListBean>(view) {
 
-                    @Override
-                    public void onNext(OneListBean oneListBean) {
-                        loadOneListData.onSuccess(oneListBean);
+                            @Override
+                            public void onNext(OneListBean oneListBean) {
+//                        loadOneListData.onSuccess(oneListBean);
+                                view.refreshData(oneListBean);
 
-                    }
-                })
+                            }
+
+                            @Override
+                            public void onComplete() {
+                                super.onComplete();
+                                view.hideRefresh();
+                            }
+                        })
         );
     }
+
 
 }

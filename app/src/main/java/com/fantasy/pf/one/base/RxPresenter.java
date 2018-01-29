@@ -14,9 +14,10 @@ import io.reactivex.disposables.Disposable;
 public class RxPresenter<T extends BaseView> implements BasePresenter<T> {
 
     public T view;
+    // 管理所有的observer
     private CompositeDisposable mCompositeDisposable;
 
-
+    // 防侧漏
     private void unSubscribe(){
         if (mCompositeDisposable != null){
             mCompositeDisposable.clear();

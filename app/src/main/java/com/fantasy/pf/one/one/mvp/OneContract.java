@@ -12,16 +12,17 @@ import com.fantasy.pf.one.model.bean.OneListBean;
  * let none that wait on thee be ashamed
  */
 
-public class OneContract {
-
-
+public interface OneContract {
     interface View extends BaseView{
-
+        void showRefresh();
+        void hideRefresh();
+        void refreshData(OneListBean oneListBean);
     }
 
     interface Presenter extends BasePresenter<View>{
 //        void  getOneIdList();
-        void getOneList(LoadOneListData listData);
+//        void getOneList(LoadOneListData listData);
+        void  loadOneList(int page);
     }
 
 
