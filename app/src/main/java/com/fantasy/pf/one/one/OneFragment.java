@@ -14,10 +14,12 @@ import android.widget.Toast;
 
 import com.fantasy.pf.one.R;
 import com.fantasy.pf.one.base.MvpBaseFragment;
+import com.fantasy.pf.one.main.MainActivity;
 import com.fantasy.pf.one.model.bean.OneListBean;
 import com.fantasy.pf.one.one.mvp.LoadOneListData;
 import com.fantasy.pf.one.one.mvp.OneContract;
 import com.fantasy.pf.one.one.mvp.OnePresenter;
+import com.fantasy.pf.one.widget.listener.HidingScrollBottomListener;
 import com.fantasy.pf.one.widget.refresh.RefreshLayout;
 import com.fantasy.pf.one.widget.refresh.SwipeRefreshLayoutDirection;
 
@@ -75,8 +77,23 @@ public class OneFragment extends MvpBaseFragment<OnePresenter> implements Refres
         mRecyclerView.setAdapter(mOneAdapter);
         onRefresh(SwipeRefreshLayoutDirection.TOP);
 
+        initListener();
+
     }
 
+    private void initListener(){
+        mRecyclerView.addOnScrollListener(new HidingScrollBottomListener() {
+            @Override
+            public void onHide() {
+                ((MainActivity) getActivity()).changeRadioGState(false);
+            }
+
+            @Override
+            public void onShow() {
+                ((MainActivity) getActivity()).changeRadioGState(true);
+            }
+        });
+    }
 
     @Override
     public void showErrorMsg(String msg) {
@@ -119,7 +136,7 @@ public class OneFragment extends MvpBaseFragment<OnePresenter> implements Refres
     public void refreshData(OneListBean oneListBean) {
         mOneAdapter.addOneListData(oneListBean,mPage == 0);
     }
-
+    // 滑到顶端 aty中点击rb执行此方法
     public void scrollToTop(){
         mLayoutManager.scrollToPositionWithOffset(0,0);
         mLayoutManager.setStackFromEnd(true);

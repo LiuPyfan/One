@@ -5,7 +5,10 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -25,6 +28,8 @@ public class MainActivity extends MvpBaseActivity<MainPresenter> implements Main
 
     @BindView(R.id.frame_content)
     FrameLayout frameContent;
+    @BindView(R.id.layout_bottom)
+    LinearLayout layoutBottom;
     @BindView(R.id.radio_group)
     RadioGroup radioGroup;
     @BindView(R.id.rb_one)
@@ -124,6 +129,12 @@ public class MainActivity extends MvpBaseActivity<MainPresenter> implements Main
         }
 
         mRadioChanged = false;
+    }
+    // 显示隐藏动画，在具体的frg中回调
+    public void changeRadioGState(boolean isShow){
+        Animation animation = AnimationUtils.loadAnimation(this,isShow?R.anim.rb_show:R.anim.rb_hide);
+        animation.setFillAfter(true);
+        layoutBottom.startAnimation(animation);
     }
 
 }
