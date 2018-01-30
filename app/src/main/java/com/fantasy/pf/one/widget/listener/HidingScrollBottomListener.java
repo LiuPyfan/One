@@ -58,7 +58,7 @@ public abstract class HidingScrollBottomListener extends RecyclerView.OnScrollLi
             }
             mScrolledDistance = 0;// 置0 ，防止继续滑动
         }
-        
+
         //mControlsVisible && dy>0 控件可见 手指向上滑 界面向下滑
         //!mControlsVisible && dy<0 控件不可见 手指向下滑 界面向上滑
 

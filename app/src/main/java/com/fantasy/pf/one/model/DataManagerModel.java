@@ -1,7 +1,9 @@
 package com.fantasy.pf.one.model;
 
+import com.fantasy.pf.one.model.bean.MovieDetailBean;
 import com.fantasy.pf.one.model.bean.OneIdBean;
 import com.fantasy.pf.one.model.bean.OneListBean;
+import com.fantasy.pf.one.model.bean.ReadDetailBean;
 import com.fantasy.pf.one.model.db.DBHelper;
 import com.fantasy.pf.one.model.http.HttpHelper;
 import com.fantasy.pf.one.model.http.response.MyHttpResponse;
@@ -36,6 +38,19 @@ public class DataManagerModel implements HttpHelper,DBHelper,PreferencesHelper {
     @Override
     public Flowable<MyHttpResponse<OneListBean>> getOneList(String id) {
         return mHttpHelper.getOneList(id);
+    }
+
+    // HttpHelper -> HttpHelperImpl->itemId
+    //                   |
+    // OneApis          /
+    @Override
+    public Flowable<MyHttpResponse<ReadDetailBean>> getReadDetail(String itemId) {
+        return mHttpHelper.getReadDetail(itemId);
+    }
+
+    @Override
+    public Flowable<MyHttpResponse<MovieDetailBean>> getMovieDetail(String itemId) {
+        return mHttpHelper.getMovieDetail(itemId);
     }
 
 //    @Override

@@ -1,6 +1,7 @@
 package com.fantasy.pf.one.one;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,6 +17,7 @@ import com.fantasy.pf.one.R;
 import com.fantasy.pf.one.base.MvpBaseFragment;
 import com.fantasy.pf.one.main.MainActivity;
 import com.fantasy.pf.one.model.bean.OneListBean;
+import com.fantasy.pf.one.one.detail.ReadDetailActivity;
 import com.fantasy.pf.one.one.mvp.LoadOneListData;
 import com.fantasy.pf.one.one.mvp.OneContract;
 import com.fantasy.pf.one.one.mvp.OnePresenter;
@@ -28,7 +30,7 @@ import butterknife.BindView;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class OneFragment extends MvpBaseFragment<OnePresenter> implements RefreshLayout.OnRefreshListener, OneContract.View {
+public class OneFragment extends MvpBaseFragment<OnePresenter> implements RefreshLayout.OnRefreshListener, OneContract.View,OneAdapter.OnItemClickListener {
     //
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
@@ -73,7 +75,7 @@ public class OneFragment extends MvpBaseFragment<OnePresenter> implements Refres
 //            }
 //        });
 
-        mOneAdapter = new OneAdapter(getActivity());
+        mOneAdapter = new OneAdapter(getActivity(),this);
         mRecyclerView.setAdapter(mOneAdapter);
         onRefresh(SwipeRefreshLayoutDirection.TOP);
 
@@ -140,5 +142,11 @@ public class OneFragment extends MvpBaseFragment<OnePresenter> implements Refres
     public void scrollToTop(){
         mLayoutManager.scrollToPositionWithOffset(0,0);
         mLayoutManager.setStackFromEnd(true);
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        Intent intent = new Intent(getActivity(), ReadDetailActivity.class);
+        startActivity(intent);
     }
 }

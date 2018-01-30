@@ -6,6 +6,7 @@ import com.fantasy.pf.one.di.module.ActivityModule;
 import com.fantasy.pf.one.di.module.AppModule;
 import com.fantasy.pf.one.di.scope.ActivityScope;
 import com.fantasy.pf.one.main.MainActivity;
+import com.fantasy.pf.one.one.detail.ReadDetailActivity;
 
 import dagger.Component;
 
@@ -28,4 +29,6 @@ public interface ActivityComponent {
     Activity getActivity();
     // 将以上的三个依赖注入到某个类中
     void inject(MainActivity mainActivity);
+
+    void inject(ReadDetailActivity readDetailActivity);
 }

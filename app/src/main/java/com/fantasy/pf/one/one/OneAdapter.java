@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -31,6 +32,11 @@ public class OneAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private OneListBean mOneListBean;
     private OneListBean.ContentListBean mContentListBean;
     private Context mContext;
+    private OnItemClickListener mOnItemClickListener;
+
+    public interface OnItemClickListener {
+        void onItemClick(int position);
+    }
 
     private enum ITEM_TYPE {
         CATEGORY_COMMON,
@@ -43,6 +49,12 @@ public class OneAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public OneAdapter(Context context) {
         mContext = context;
+
+    }
+
+    public OneAdapter(Context context,OnItemClickListener itemClickListener) {
+        mContext = context;
+        mOnItemClickListener = itemClickListener;
     }
 
     public OneAdapter(OneListBean oneListBean, Context context) {
@@ -222,7 +234,7 @@ public class OneAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return mOneListBean == null ? 0 : mOneListBean.getContentList().size();
     }
 
-    class OneViewHolder extends RecyclerView.ViewHolder {
+    class OneViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @BindView(R.id.tv_category)
         TextView mTvCategory;
         @BindView(R.id.tv_title)
@@ -245,6 +257,14 @@ public class OneAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         public OneViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (mOnItemClickListener != null) {
+                mOnItemClickListener.onItemClick(getAdapterPosition());
+            }
         }
     }
 
