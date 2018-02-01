@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -11,6 +12,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fantasy.pf.one.R;
@@ -38,6 +40,8 @@ public class MainActivity extends MvpBaseActivity<MainPresenter> implements Main
     RadioButton rbAll;
     @BindView(R.id.rb_me)
     RadioButton rbMe;
+    @BindView(R.id.tv_weather)
+    TextView tvWeather;
     private Fragment mCurrentFragment;
     private OneFragment mOneFragment;
     private AllFragment mAllFragment;
@@ -53,6 +57,7 @@ public class MainActivity extends MvpBaseActivity<MainPresenter> implements Main
 
     @Override
     public void init() {
+        isBack = false;
         initToolbar();
         mCurrentFragment = new OneFragment();
         radioGroup.setOnCheckedChangeListener(this);
@@ -127,7 +132,6 @@ public class MainActivity extends MvpBaseActivity<MainPresenter> implements Main
                     break;
             }
         }
-
         mRadioChanged = false;
     }
     // 显示隐藏动画，在具体的frg中回调
@@ -135,6 +139,20 @@ public class MainActivity extends MvpBaseActivity<MainPresenter> implements Main
         Animation animation = AnimationUtils.loadAnimation(this,isShow?R.anim.rb_show:R.anim.rb_hide);
         animation.setFillAfter(true);
         layoutBottom.startAnimation(animation);
+    }
+
+
+    public void setToolBarTitle(String title){
+        tvTitle.setText(Html.fromHtml(title));
+    }
+
+    public void setToolBarWeather(String weather){
+        setToolBarWeatherState(true);
+        tvWeather.setText(weather);
+    }
+
+    public void setToolBarWeatherState(boolean state) {
+        tvWeather.setVisibility(state ? View.VISIBLE :View.GONE);
     }
 
 }

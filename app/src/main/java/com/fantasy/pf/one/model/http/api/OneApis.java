@@ -3,6 +3,7 @@ package com.fantasy.pf.one.model.http.api;
 
 
 import com.fantasy.pf.one.model.bean.MovieDetailBean;
+import com.fantasy.pf.one.model.bean.MusicDetailBean;
 import com.fantasy.pf.one.model.bean.OneIdBean;
 import com.fantasy.pf.one.model.bean.OneListBean;
 import com.fantasy.pf.one.model.bean.ReadDetailBean;
@@ -47,15 +48,15 @@ public interface OneApis {
     @GET("movie/{item_id}/story/1/0" + END)
     Flowable<MyHttpResponse<MovieDetailBean>> getMovieDetail(@Path("item_id") String itemId);
 
-//    //获取音乐详细信息
-//    @GET("music/detail/{item_id}" + END)
-//    Flowable<MyHttpResponse<MusicDetailBean>> geMusicDetail(@Path("item_id") String itemId);
-//
+    //获取音乐详细信息
+    @GET("music/detail/{item_id}" + END)
+    Flowable<MyHttpResponse<MusicDetailBean>> getMusicDetail(@Path("item_id") String itemId);
+
 //    //获取问答的详细信息
 //    @GET("question/{item_id}" + END)
-//    Flowable<MyHttpResponse<QuestionDetailBean>> geQuestionDetail(@Path("item_id") String itemId);
+//    Flowable<MyHttpResponse<QuestionDetailBean>> getQuestionDetail(@Path("item_id") String itemId);
 //
 //    //获取影视的photo
 //    @GET("movie/detail/{item_id}" + END)
-//    Flowable<MyHttpResponse<MoviePhotoBean>> geMoviePhoto(@Path("item_id") String itemId);
+//    Flowable<MyHttpResponse<MoviePhotoBean>> getMoviePhoto(@Path("item_id") String itemId);
 }

@@ -1,6 +1,7 @@
 package com.fantasy.pf.one.model;
 
 import com.fantasy.pf.one.model.bean.MovieDetailBean;
+import com.fantasy.pf.one.model.bean.MusicDetailBean;
 import com.fantasy.pf.one.model.bean.OneIdBean;
 import com.fantasy.pf.one.model.bean.OneListBean;
 import com.fantasy.pf.one.model.bean.ReadDetailBean;
@@ -40,9 +41,7 @@ public class DataManagerModel implements HttpHelper,DBHelper,PreferencesHelper {
         return mHttpHelper.getOneList(id);
     }
 
-    // HttpHelper -> HttpHelperImpl->itemId
-    //                   |
-    // OneApis          /
+
     @Override
     public Flowable<MyHttpResponse<ReadDetailBean>> getReadDetail(String itemId) {
         return mHttpHelper.getReadDetail(itemId);
@@ -51,6 +50,12 @@ public class DataManagerModel implements HttpHelper,DBHelper,PreferencesHelper {
     @Override
     public Flowable<MyHttpResponse<MovieDetailBean>> getMovieDetail(String itemId) {
         return mHttpHelper.getMovieDetail(itemId);
+    }
+
+    // 获取HttpHelper
+    @Override
+    public Flowable<MyHttpResponse<MusicDetailBean>> getMusicDetail(String itemId) {
+        return mHttpHelper.getMusicDetail(itemId);
     }
 
 //    @Override

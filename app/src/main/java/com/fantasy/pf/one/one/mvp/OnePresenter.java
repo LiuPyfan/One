@@ -167,7 +167,7 @@ public class OnePresenter extends RxPresenter<OneContract.View> implements OneCo
                             @Override
                             public void onNext(OneListBean oneListBean) {
 //                        loadOneListData.onSuccess(oneListBean);
-                                view.refreshData(oneListBean);
+                                 view.refreshData(oneListBean);
 
                             }
 

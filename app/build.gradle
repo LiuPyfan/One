@@ -23,6 +23,7 @@ android {
         }
     }
 
+    sourceSets { main { assets.srcDirs = ['src/main/assets', 'src/main/assets/'] } }
 }
 
 dependencies {
@@ -53,7 +54,7 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
     compile 'com.squareup.okhttp3:okhttp:3.9.1'
     compile 'com.squareup.okhttp3:logging-interceptor:3.9.0'
-
-    compile 'org.sufficientlysecure:html-textview:3.5'
+    //html TextView
+    compile 'com.github.limedroid:XRichText:v1.0.0'
 
 }

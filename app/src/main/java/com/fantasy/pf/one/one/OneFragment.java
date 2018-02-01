@@ -21,6 +21,7 @@ import com.fantasy.pf.one.one.detail.ReadDetailActivity;
 import com.fantasy.pf.one.one.mvp.LoadOneListData;
 import com.fantasy.pf.one.one.mvp.OneContract;
 import com.fantasy.pf.one.one.mvp.OnePresenter;
+import com.fantasy.pf.one.utils.Constants;
 import com.fantasy.pf.one.widget.listener.HidingScrollBottomListener;
 import com.fantasy.pf.one.widget.refresh.RefreshLayout;
 import com.fantasy.pf.one.widget.refresh.SwipeRefreshLayoutDirection;
@@ -40,6 +41,8 @@ public class OneFragment extends MvpBaseFragment<OnePresenter> implements Refres
     private LinearLayoutManager mLayoutManager;
     private OneAdapter mOneAdapter;
     private int mPage;
+
+    private OneListBean mOneListBean;
 
     @Override
     protected void initInject() {
@@ -88,11 +91,14 @@ public class OneFragment extends MvpBaseFragment<OnePresenter> implements Refres
             @Override
             public void onHide() {
                 ((MainActivity) getActivity()).changeRadioGState(false);
+                ((MainActivity) getActivity()).setToolBarWeatherState(false);
+
             }
 
             @Override
             public void onShow() {
                 ((MainActivity) getActivity()).changeRadioGState(true);
+                ((MainActivity) getActivity()).setToolBarWeatherState(true);
             }
         });
     }
@@ -136,7 +142,16 @@ public class OneFragment extends MvpBaseFragment<OnePresenter> implements Refres
 
     @Override
     public void refreshData(OneListBean oneListBean) {
+        mOneListBean = oneListBean;
         mOneAdapter.addOneListData(oneListBean,mPage == 0);
+        // 获取标题头天气
+        OneListBean.WeatherBean weatherBean = oneListBean.getWeather();
+
+        ((MainActivity)getActivity()).setToolBarTitle(oneListBean.getDate().split(" ")[0]
+                                    .replace("-","<font color='#878787'> / </font>"));//2018-02-01 06:00:00
+
+        ((MainActivity) getActivity()).setToolBarWeather(weatherBean.getCityName() +
+                "  " + weatherBean.getClimate() + "  " + weatherBean.getTemperature()+"℃");
     }
     // 滑到顶端 aty中点击rb执行此方法
     public void scrollToTop(){
@@ -147,6 +162,7 @@ public class OneFragment extends MvpBaseFragment<OnePresenter> implements Refres
     @Override
     public void onItemClick(int position) {
         Intent intent = new Intent(getActivity(), ReadDetailActivity.class);
+        intent.putExtra(Constants.ONE_LIST_BEAN, mOneListBean.getContentList().get(position));
         startActivity(intent);
     }
 }

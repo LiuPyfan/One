@@ -1,6 +1,7 @@
 package com.fantasy.pf.one.model.http;
 
 import com.fantasy.pf.one.model.bean.MovieDetailBean;
+import com.fantasy.pf.one.model.bean.MusicDetailBean;
 import com.fantasy.pf.one.model.bean.OneIdBean;
 import com.fantasy.pf.one.model.bean.OneListBean;
 import com.fantasy.pf.one.model.bean.ReadDetailBean;
@@ -45,6 +46,14 @@ public class HttpHelperImpl implements HttpHelper {
     @Override
     public Flowable<MyHttpResponse<MovieDetailBean>> getMovieDetail(String itemId) {
         return mOneApis.getMovieDetail(itemId);
+    }
+
+    // HttpHelper -> HttpHelperImpl->itemId  -> 返回Flowable,供DataManagerModel 里的HttpHelper调用
+    //                   |
+    // OneApis          /
+    @Override
+    public Flowable<MyHttpResponse<MusicDetailBean>> getMusicDetail(String itemId) {
+        return mOneApis.getMusicDetail(itemId);
     }
 
 //    @Override

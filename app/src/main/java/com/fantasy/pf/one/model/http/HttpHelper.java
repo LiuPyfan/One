@@ -1,6 +1,7 @@
 package com.fantasy.pf.one.model.http;
 
 import com.fantasy.pf.one.model.bean.MovieDetailBean;
+import com.fantasy.pf.one.model.bean.MusicDetailBean;
 import com.fantasy.pf.one.model.bean.OneIdBean;
 import com.fantasy.pf.one.model.bean.OneListBean;
 import com.fantasy.pf.one.model.bean.ReadDetailBean;
@@ -23,6 +24,9 @@ public interface HttpHelper {
     Flowable<MyHttpResponse<OneListBean>> getOneList(String id);
 
     Flowable<MyHttpResponse<ReadDetailBean>>getReadDetail(String itemId);
+
     Flowable<MyHttpResponse<MovieDetailBean>> getMovieDetail(String itemId);
+
+    Flowable<MyHttpResponse<MusicDetailBean>> getMusicDetail(String itemId);
 
 }

@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.fantasy.pf.one.R;
 import com.fantasy.pf.one.application.OneApplication;
+import com.fantasy.pf.one.widget.HpTextView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -31,7 +32,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     private static final String TAG = "pf";
     private OneApplication mApplication;
 
-    public TextView tvTitle;
+    public HpTextView tvTitle;
     // 物理键
     public boolean isBack = true;
     private long mExitTime;
@@ -64,8 +65,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         // 工具栏设置文字
         if (toolbar != null) {
-            tvTitle = (TextView) findViewById(R.id.tv_title);
             setSupportActionBar(toolbar);
+            tvTitle = findViewById(R.id.tv_title);
             setTitle("");
             toolbar.setOnMenuItemClickListener(onMenuItemClick);
         }
@@ -78,8 +79,8 @@ public abstract class BaseActivity extends AppCompatActivity {
                 }
             });
         }
-        if (EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().unregister(this);
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
         }
     }
 
@@ -135,6 +136,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             EventBus.getDefault().unregister(this);
         }
     }
+
 
 
 }

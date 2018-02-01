@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.fantasy.pf.one.R;
+import com.fantasy.pf.one.model.bean.ContentListBean;
 import com.fantasy.pf.one.model.bean.OneListBean;
 import com.fantasy.pf.one.utils.Constants;
 import com.fantasy.pf.one.utils.Utils;
@@ -30,7 +31,8 @@ import butterknife.ButterKnife;
 public class OneAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private OneListBean mOneListBean;
-    private OneListBean.ContentListBean mContentListBean;
+    // 抽取OneListBean.OneListBean
+    private ContentListBean mContentListBean;
     private Context mContext;
     private OnItemClickListener mOnItemClickListener;
 
@@ -114,7 +116,8 @@ public class OneAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             return new OneMovieViewHolder(layoutInflater.inflate(R.layout.item_one_movie, parent, false));
         } else if (viewType == ITEM_TYPE.CATEGORY_ADVERTISE.ordinal()) {
             // 广告 forward字段为空为广告
-            if (TextUtils.isEmpty(mContentListBean.getForward())) {
+//            if (TextUtils.isEmpty(mContentListBean.getForward())) {
+            if (TextUtils.isEmpty(mContentListBean.getAuthor().getUserId())) {
                 return new OneViewHolder(layoutInflater.inflate(R.layout.item_one_advertise, parent, false));
             }else {
                 return new OneViewHolder(layoutInflater.inflate(R.layout.item_one_common,parent,false));

@@ -4,10 +4,13 @@ import android.util.Log;
 
 import com.fantasy.pf.one.base.RxPresenter;
 import com.fantasy.pf.one.model.DataManagerModel;
+import com.fantasy.pf.one.model.bean.ContentListBean;
 import com.fantasy.pf.one.model.bean.MovieDetailBean;
+import com.fantasy.pf.one.model.bean.MusicDetailBean;
 import com.fantasy.pf.one.model.bean.ReadDetailBean;
 import com.fantasy.pf.one.model.http.CommonSubscriber;
 import com.fantasy.pf.one.model.http.response.MyHttpResponse;
+import com.fantasy.pf.one.utils.Constants;
 import com.fantasy.pf.one.utils.RxUtil;
 
 import org.reactivestreams.Publisher;
@@ -32,9 +35,10 @@ public class ReadDetailPresenter extends RxPresenter<ReadDetailContract.View> im
         mDataManagerModel = dataManagerModel;
     }
 
+
     @Override
-    public void loadReadDetail(int position) {
-        addSubscribe(mDataManagerModel.getReadDetail("2897")
+    public void loadReadDetail(String itemId) {
+        addSubscribe(mDataManagerModel.getReadDetail(itemId)
                 .compose(RxUtil.<MyHttpResponse<ReadDetailBean>>rxSchedulerHelper())
                 .flatMap(new Function<MyHttpResponse<ReadDetailBean>, Publisher<ReadDetailBean>>() {
                     @Override
@@ -55,8 +59,8 @@ public class ReadDetailPresenter extends RxPresenter<ReadDetailContract.View> im
     }
 
     @Override
-    public void loadMovieDetail(int position) {
-        addSubscribe(mDataManagerModel.getMovieDetail("1220")
+    public void loadMovieDetail(String itemId) {
+        addSubscribe(mDataManagerModel.getMovieDetail(itemId)
                 .compose(RxUtil.<MyHttpResponse<MovieDetailBean>>rxSchedulerHelper())
                 .flatMap(new Function<MyHttpResponse<MovieDetailBean>, Publisher<MovieDetailBean>>() {
                     @Override
@@ -75,4 +79,44 @@ public class ReadDetailPresenter extends RxPresenter<ReadDetailContract.View> im
 
         );
     }
+
+    @Override
+    public void loadMusicDetail(String itemId) {
+        addSubscribe(mDataManagerModel.getMusicDetail(itemId)
+                    .compose(RxUtil.<MyHttpResponse<MusicDetailBean>>rxSchedulerHelper())
+                    .flatMap(new Function<MyHttpResponse<MusicDetailBean>, Publisher<MusicDetailBean>>() {
+                        @Override
+                        public Publisher<MusicDetailBean> apply(MyHttpResponse<MusicDetailBean> httpResponse) throws Exception {
+                            return Flowable.just(httpResponse.getData());
+                        }
+                    })
+                    .subscribeWith(new CommonSubscriber<MusicDetailBean>(view){
+
+                        @Override
+                        public void onNext(MusicDetailBean musicDetailBean) {
+                            view.showContent(musicDetailBean.toString());
+                            Log.d(TAG, musicDetailBean.toString());
+                        }
+                    })
+
+        );
+    }
+
+    @Override
+    public void loadDetail(ContentListBean contentListBean) {
+        String itemId = contentListBean.getItemId();
+        switch(Integer.parseInt(contentListBean.getCategory())){
+            case Constants.CATEGORY_MUSIC:
+                loadMovieDetail(itemId);
+                break;
+            case Constants.CATEGORY_MOVIE:
+                loadMusicDetail(itemId);
+                break;
+            default:
+                loadReadDetail(itemId);
+                break;
+        }
+    }
+
+
 }
