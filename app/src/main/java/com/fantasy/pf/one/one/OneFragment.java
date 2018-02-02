@@ -22,16 +22,22 @@ import com.fantasy.pf.one.one.mvp.LoadOneListData;
 import com.fantasy.pf.one.one.mvp.OneContract;
 import com.fantasy.pf.one.one.mvp.OnePresenter;
 import com.fantasy.pf.one.utils.Constants;
+import com.fantasy.pf.one.utils.Utils;
 import com.fantasy.pf.one.widget.listener.HidingScrollBottomListener;
 import com.fantasy.pf.one.widget.refresh.RefreshLayout;
 import com.fantasy.pf.one.widget.refresh.SwipeRefreshLayoutDirection;
 
+import org.reactivestreams.Publisher;
+
 import butterknife.BindView;
+import io.reactivex.Flowable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class OneFragment extends MvpBaseFragment<OnePresenter> implements RefreshLayout.OnRefreshListener, OneContract.View,OneAdapter.OnItemClickListener {
+public class OneFragment extends MvpBaseFragment<OnePresenter> implements RefreshLayout.OnRefreshListener, OneContract.View, OneAdapter.OnItemClickListener {
     //
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
@@ -78,7 +84,7 @@ public class OneFragment extends MvpBaseFragment<OnePresenter> implements Refres
 //            }
 //        });
 
-        mOneAdapter = new OneAdapter(getActivity(),this);
+        mOneAdapter = new OneAdapter(getActivity(), this);
         mRecyclerView.setAdapter(mOneAdapter);
         onRefresh(SwipeRefreshLayoutDirection.TOP);
 
@@ -86,7 +92,7 @@ public class OneFragment extends MvpBaseFragment<OnePresenter> implements Refres
 
     }
 
-    private void initListener(){
+    private void initListener() {
         mRecyclerView.addOnScrollListener(new HidingScrollBottomListener() {
             @Override
             public void onHide() {
@@ -99,6 +105,26 @@ public class OneFragment extends MvpBaseFragment<OnePresenter> implements Refres
             public void onShow() {
                 ((MainActivity) getActivity()).changeRadioGState(true);
                 ((MainActivity) getActivity()).setToolBarWeatherState(true);
+            }
+
+            @Override
+            public void onUpdateDate() {
+                Flowable.just(Utils.getCurrentViewIndex(mLayoutManager))
+                        .flatMap(new Function<Integer, Publisher<String>>() {
+                            @Override
+                            public Publisher<String> apply(Integer integer) throws Exception {
+                                // Log.d("OneFragment", "integer:" + integer);
+                                 Log.d("OneAdapter", "integer:" + integer);
+                                return Flowable.just(mOneAdapter.getDate(integer));
+                            }
+                        })
+                        .subscribe(new Consumer<String>() {
+                            @Override
+                            public void accept(String s) throws Exception {
+                                ((MainActivity) getActivity()).setToolBarTitle(s);
+
+                            }
+                        });
             }
         });
     }
@@ -114,7 +140,7 @@ public class OneFragment extends MvpBaseFragment<OnePresenter> implements Refres
         if (direction == SwipeRefreshLayoutDirection.TOP) {
             mPage = 0;
             refreshLayout.setDirection(SwipeRefreshLayoutDirection.BOTH);
-        }else {
+        } else {
             mPage++;
         }
         presenter.loadOneList(mPage);
@@ -143,19 +169,24 @@ public class OneFragment extends MvpBaseFragment<OnePresenter> implements Refres
     @Override
     public void refreshData(OneListBean oneListBean) {
         mOneListBean = oneListBean;
-        mOneAdapter.addOneListData(oneListBean,mPage == 0);
+        mOneAdapter.addOneListData(oneListBean, mPage == 0);
         // 获取标题头天气
         OneListBean.WeatherBean weatherBean = oneListBean.getWeather();
 
-        ((MainActivity)getActivity()).setToolBarTitle(oneListBean.getDate().split(" ")[0]
-                                    .replace("-","<font color='#878787'> / </font>"));//2018-02-01 06:00:00
+        // ((MainActivity)getActivity()).setToolBarTitle(oneListBean.getDate().split(" ")[0].replace("-","<font color='#878787'> / </font>"));//2018-02-01 06:00:00
+        //((MainActivity) getActivity()).setToolBarWeather(weatherBean.getCityName() + "  " + weatherBean.getClimate() + "  " + weatherBean.getTemperature()+"℃");
 
-        ((MainActivity) getActivity()).setToolBarWeather(weatherBean.getCityName() +
-                "  " + weatherBean.getClimate() + "  " + weatherBean.getTemperature()+"℃");
+
+        if (mPage == 0) {
+            ((MainActivity) getActivity()).setToolBarTitle(Utils.formatDate(oneListBean.getDate()));
+            ((MainActivity) getActivity()).setToolBarWeather(weatherBean.getCityName() +
+                    "  " + weatherBean.getClimate() + "  " + weatherBean.getTemperature() + "℃");
+        }
     }
+
     // 滑到顶端 aty中点击rb执行此方法
-    public void scrollToTop(){
-        mLayoutManager.scrollToPositionWithOffset(0,0);
+    public void scrollToTop() {
+        mLayoutManager.scrollToPositionWithOffset(0, 0);
         mLayoutManager.setStackFromEnd(true);
     }
 
@@ -164,5 +195,11 @@ public class OneFragment extends MvpBaseFragment<OnePresenter> implements Refres
         Intent intent = new Intent(getActivity(), ReadDetailActivity.class);
         intent.putExtra(Constants.ONE_LIST_BEAN, mOneListBean.getContentList().get(position));
         startActivity(intent);
+    }
+
+    @Override
+    public void onDestroy() {
+        if (presenter.view != null)presenter.view = null;
+        super.onDestroy();
     }
 }

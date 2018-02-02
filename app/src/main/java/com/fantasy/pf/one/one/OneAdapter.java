@@ -54,7 +54,7 @@ public class OneAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     }
 
-    public OneAdapter(Context context,OnItemClickListener itemClickListener) {
+    public OneAdapter(Context context, OnItemClickListener itemClickListener) {
         mContext = context;
         mOnItemClickListener = itemClickListener;
     }
@@ -64,10 +64,10 @@ public class OneAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         mContext = context;
     }
 
-    public void addOneListData(OneListBean oneListBean,boolean isFirst){
-        if (isFirst){
+    public void addOneListData(OneListBean oneListBean, boolean isFirst) {
+        if (isFirst) {
             mOneListBean = oneListBean;
-        }else {
+        } else {
             mOneListBean.getContentList().addAll(oneListBean.getContentList());
         }
         notifyDataSetChanged();
@@ -75,6 +75,12 @@ public class OneAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         for (int i = 0; i < mOneListBean.getContentList().size(); i++) {
             notifyItemInserted(i);
         }
+    }
+
+    public String getDate(int position) {
+        Log.d("OneAdapter", "" + position);
+        Log.d("OneAdapter", "" + mOneListBean.getContentList().get(position).getPostDate());
+        return Utils.formatDate(mOneListBean.getContentList().get(position).getPostDate());
     }
 
     @Override
@@ -119,8 +125,8 @@ public class OneAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 //            if (TextUtils.isEmpty(mContentListBean.getForward())) {
             if (TextUtils.isEmpty(mContentListBean.getAuthor().getUserId())) {
                 return new OneViewHolder(layoutInflater.inflate(R.layout.item_one_advertise, parent, false));
-            }else {
-                return new OneViewHolder(layoutInflater.inflate(R.layout.item_one_common,parent,false));
+            } else {
+                return new OneViewHolder(layoutInflater.inflate(R.layout.item_one_common, parent, false));
             }
 
         } else if (viewType == ITEM_TYPE.CATEGORY_RADIO.ordinal()) {
@@ -136,10 +142,9 @@ public class OneAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         if (viewHolder instanceof OneAdvertiseViewHolder) {
             Utils.displayImage(mContext, mContentListBean.getImgUrl(), ((OneAdvertiseViewHolder) viewHolder).ivAdvertise);
-        }else if (viewHolder instanceof OneRadioViewHolder){
+        } else if (viewHolder instanceof OneRadioViewHolder) {
             radioHolder(((OneRadioViewHolder) viewHolder));
-        }
-        else {
+        } else {
             otherHolder((OneViewHolder) viewHolder, position);
         }
 
@@ -191,13 +196,13 @@ public class OneAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (getItemViewType(position) == ITEM_TYPE.CATEGORY_REPORTER.ordinal()) {
 
             if (mContentListBean.getTitle().equals(Constants.ILLUSTRATION)) {
-                ((OneReportedViewHolder)holder).ivCoverIllustration.setVisibility(View.VISIBLE);
+                ((OneReportedViewHolder) holder).ivCoverIllustration.setVisibility(View.VISIBLE);
                 holder.mIvCover.setVisibility(View.GONE);
-                Utils.displayImage(mContext,mContentListBean.getImgUrl(),((OneReportedViewHolder)holder).ivCoverIllustration);
-            }else {
+                Utils.displayImage(mContext, mContentListBean.getImgUrl(), ((OneReportedViewHolder) holder).ivCoverIllustration);
+            } else {
                 ((OneReportedViewHolder) holder).ivCoverIllustration.setVisibility(View.GONE);
                 holder.mIvCover.setVisibility(View.VISIBLE);
-                Utils.displayImage(mContext,mContentListBean.getImgUrl(),holder.mIvCover);
+                Utils.displayImage(mContext, mContentListBean.getImgUrl(), holder.mIvCover);
             }
             holder.mTvCategory.setText(mContentListBean.getTitle() + " | " + mContentListBean.getPic_info());
             holder.mTvUserName.setText(mContentListBean.getWords_info().trim());
@@ -211,7 +216,7 @@ public class OneAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             if (getItemViewType(position) == ITEM_TYPE.CATEGORY_ADVERTISE.ordinal()) {
                 // 是common 类型的广告
                 holder.mTvCategory.setText(String.format(mContext.getString(R.string.category), mContentListBean.getShareList().getWx().getTitle().trim()));
-            }else {
+            } else {
                 holder.mTvCategory.setText(String.format(mContext.getString(R.string.category),
                         mContentListBean.getShareList().getWx().getTitle().split("\\|")[0].trim()));
             }

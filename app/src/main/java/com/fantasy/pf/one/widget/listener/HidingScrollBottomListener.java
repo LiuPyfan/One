@@ -15,7 +15,9 @@ public abstract class HidingScrollBottomListener extends RecyclerView.OnScrollLi
 
     private static final int HIDE_THRESHOLD = 20;//滑动隐藏的阈值
 
-    private int mScrolledDistance = 0;//滑动距离
+    private static final int DATE_THRESHOLD = 1000;//滑动检查date的阈值
+    private int mScrolledDistance = 0;//滑动距离差
+    private int mScrolledDistanceCount = 0;//滑动总距离
     private boolean mControlsVisible = true;//控件的显示状态
 
     /**
@@ -30,6 +32,17 @@ public abstract class HidingScrollBottomListener extends RecyclerView.OnScrollLi
     @Override
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
+        // 日期滚动的判断
+        mScrolledDistanceCount += Math.abs(dy);
+
+        if (mScrolledDistanceCount > DATE_THRESHOLD) {
+            // 滑动总距离大于设定最小版面值 // 此时更新日期 返回int
+            onUpdateDate();
+            mScrolledDistanceCount = 0;
+        }
+
+
+
         // 必须是LinearLayoutManager，定义第一条item
         int firestVisibleItem = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
         // item == 0 说明已经滑动到最顶端
@@ -72,4 +85,6 @@ public abstract class HidingScrollBottomListener extends RecyclerView.OnScrollLi
     public abstract void onHide();//在onHide()方法里面实现控件隐藏功能
 
     public abstract void onShow();//在onShow()方法里面实现控件显示功能
+
+    public abstract void onUpdateDate();
 }
