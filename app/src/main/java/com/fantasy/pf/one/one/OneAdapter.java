@@ -19,6 +19,8 @@ import com.fantasy.pf.one.model.bean.OneListBean;
 import com.fantasy.pf.one.utils.Constants;
 import com.fantasy.pf.one.utils.Utils;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -62,6 +64,10 @@ public class OneAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public OneAdapter(OneListBean oneListBean, Context context) {
         mOneListBean = oneListBean;
         mContext = context;
+    }
+
+    public List<ContentListBean> getContentList(){
+        return mOneListBean.getContentList();
     }
 
     public void addOneListData(OneListBean oneListBean, boolean isFirst) {
@@ -204,7 +210,7 @@ public class OneAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 holder.mIvCover.setVisibility(View.VISIBLE);
                 Utils.displayImage(mContext, mContentListBean.getImgUrl(), holder.mIvCover);
             }
-            holder.mTvCategory.setText(mContentListBean.getTitle() + " | " + mContentListBean.getPic_info());
+            holder.mTvCategory.setText(mContentListBean.getTitle() + " | " + mContentListBean.getPicInfo());
             holder.mTvUserName.setText(mContentListBean.getWords_info().trim());
             // 是否显示head的分割线
             ((OneReportedViewHolder) holder).viewLine.setVisibility(position == 0 ? View.GONE :

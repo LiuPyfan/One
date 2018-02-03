@@ -1,15 +1,21 @@
 package com.fantasy.pf.one.main;
 
+import android.annotation.SuppressLint;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -21,7 +27,9 @@ import com.fantasy.pf.one.base.MvpBaseActivity;
 import com.fantasy.pf.one.main.mvp.MainContract;
 import com.fantasy.pf.one.main.mvp.MainPresenter;
 import com.fantasy.pf.one.me.MeFragment;
+import com.fantasy.pf.one.model.bean.ContentListBean;
 import com.fantasy.pf.one.one.OneFragment;
+import com.fantasy.pf.one.utils.Utils;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -155,4 +163,28 @@ public class MainActivity extends MvpBaseActivity<MainPresenter> implements Main
         tvWeather.setVisibility(state ? View.VISIBLE :View.GONE);
     }
 
+
+    @SuppressLint("SetTextI18n")
+    public void showPopup(ContentListBean contentListBean){
+        View popView = LayoutInflater.from(this)
+                .inflate(R.layout.pop_reporter,null);
+        final PopupWindow popupWindow = new PopupWindow(popView, ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,true);
+        popupWindow.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.transparent)));
+        TextView tvVolume = popView.findViewById(R.id.tv_volume);
+        TextView tvTitle = popView.findViewById(R.id.tv_title);
+        final ImageView ivCover = popView.findViewById(R.id.iv_cover);
+        tvVolume.setText(contentListBean.getVolume());
+        Utils.displayImage(this,contentListBean.getImgUrl(),ivCover);
+        tvTitle.setText(contentListBean.getTitle() + " | " + contentListBean.getPicInfo());
+
+        popView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+            }
+        });
+
+        popupWindow.setAnimationStyle(R.style.pop_animation);
+        popupWindow.showAsDropDown(tvWeather);
+    }
 }

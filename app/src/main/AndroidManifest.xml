@@ -25,7 +25,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".one.detail.ReadDetailActivity" />
-        <activity android:name=".one.detail.ReporterActivity"></activity>
+        <activity android:name=".one.detail.ReporterActivity"/>
     </application>
 
 </manifest>

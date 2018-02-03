@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.fantasy.pf.one.R;
 import com.fantasy.pf.one.base.MvpBaseFragment;
 import com.fantasy.pf.one.main.MainActivity;
+import com.fantasy.pf.one.model.bean.ContentListBean;
 import com.fantasy.pf.one.model.bean.OneListBean;
 import com.fantasy.pf.one.one.detail.ReadDetailActivity;
 import com.fantasy.pf.one.one.mvp.LoadOneListData;
@@ -192,9 +193,20 @@ public class OneFragment extends MvpBaseFragment<OnePresenter> implements Refres
 
     @Override
     public void onItemClick(int position) {
-        Intent intent = new Intent(getActivity(), ReadDetailActivity.class);
-        intent.putExtra(Constants.ONE_LIST_BEAN, mOneListBean.getContentList().get(position));
-        startActivity(intent);
+        ContentListBean contentListBean = mOneAdapter.getContentList().get(position);
+        switch(Integer.parseInt(contentListBean.getCategory())){
+            case Constants.CATEGORY_REPORTER:
+                ((MainActivity)getActivity()).showPopup(contentListBean);
+                break;
+
+            default:
+                Intent intent = new Intent();
+                intent.setClass(getActivity(),ReadDetailActivity.class);
+                intent.putExtra(Constants.ONE_LIST_BEAN, mOneListBean.getContentList().get(position));
+                startActivity(intent);
+                break;
+        }
+
     }
 
     @Override
