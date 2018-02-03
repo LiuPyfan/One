@@ -32,7 +32,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     private static final String TAG = "pf";
     private OneApplication mApplication;
 
-    public HpTextView tvTitle;
+    public TextView tvTitle;
     // 物理键
     public boolean isBack = true;
     private long mExitTime;

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.TextView;
 
 import com.fantasy.pf.one.R;
 import com.fantasy.pf.one.application.OneApplication;
@@ -25,6 +26,11 @@ public class ReadDetailActivity extends MvpBaseActivity<ReadDetailPresenter> imp
 
     @BindView(R.id.rich_text)
     XRichText mRichText;
+    @BindView(R.id.tv_detail_title)
+    TextView tvDetailTitle;
+    @BindView(R.id.tv_user_name)
+    TextView tvUserName;
+
 
     // 图文混排 图片
     Bitmap mBitmap;
@@ -47,16 +53,13 @@ public class ReadDetailActivity extends MvpBaseActivity<ReadDetailPresenter> imp
     public void init() {
 //        presenter.loadReadDetail(0);
 //        presenter.loadMovieDetail(0);
+        initToolbar();
         mContentListBean = (ContentListBean) getIntent().getSerializableExtra(Constants.ONE_LIST_BEAN);
+        tvTitle.setText(mContentListBean.getShareList().getWx().getTitle().split("\\|")[0].
+                trim());
+        tvDetailTitle.setText(mContentListBean.getTitle());
+        tvUserName.setText(mContentListBean.getShareList().getWx().getDesc().split(" ")[0].trim());
         presenter.loadDetail(mContentListBean);
-    }
-
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_read_detail);
-        ButterKnife.bind(this);
     }
 
     @Override
@@ -68,15 +71,15 @@ public class ReadDetailActivity extends MvpBaseActivity<ReadDetailPresenter> imp
     @Override
     public void showContent(String content) {
         mRichText.callback(new XRichText.BaseClickCallback(){
-            @Override
-            public void onImageClick(List<String> urlList, int position) {
-                super.onImageClick(urlList, position);
-            }
-
-            @Override
-            public boolean onLinkClick(String url) {
-                return super.onLinkClick(url);
-            }
+//            @Override
+//            public void onImageClick(List<String> urlList, int position) {
+//                super.onImageClick(urlList, position);
+//            }
+//
+//            @Override
+//            public boolean onLinkClick(String url) {
+//                return super.onLinkClick(url);
+//            }
 
             @Override
             public void onFix(XRichText.ImageHolder holder) {
@@ -94,6 +97,6 @@ public class ReadDetailActivity extends MvpBaseActivity<ReadDetailPresenter> imp
                 return mBitmap;
             }
         })
-        .text(content);
+        .text(content.split("</head>")[1]); // 去除头
     }
 }
