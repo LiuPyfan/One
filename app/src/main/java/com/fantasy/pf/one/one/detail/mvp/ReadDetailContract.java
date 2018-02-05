@@ -3,6 +3,9 @@ package com.fantasy.pf.one.one.detail.mvp;
 import com.fantasy.pf.one.base.BasePresenter;
 import com.fantasy.pf.one.base.BaseView;
 import com.fantasy.pf.one.model.bean.ContentListBean;
+import com.fantasy.pf.one.model.bean.MovieDetailBean;
+import com.fantasy.pf.one.model.bean.MusicDetailBean;
+import com.fantasy.pf.one.model.bean.ReadDetailBean;
 
 /**
  * let none that wait on thee be ashamed
@@ -12,7 +15,10 @@ import com.fantasy.pf.one.model.bean.ContentListBean;
 
 public class ReadDetailContract {
     public interface View extends BaseView {
-        void showContent(String content);
+//        void showContent(String content);
+        void showReadData(ReadDetailBean readDetailBean);
+        void showMovieData(MovieDetailBean readDetailBean);
+        void showMusicData(MusicDetailBean readDetailBean);
     }
 
     public interface Presenter extends BasePresenter<View> {
