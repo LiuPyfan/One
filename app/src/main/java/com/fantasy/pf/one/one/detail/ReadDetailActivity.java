@@ -22,9 +22,14 @@ import com.fantasy.pf.one.model.bean.ReadDetailBean;
 import com.fantasy.pf.one.one.detail.mvp.ReadDetailContract;
 import com.fantasy.pf.one.one.detail.mvp.ReadDetailPresenter;
 import com.fantasy.pf.one.utils.Constants;
+import com.fantasy.pf.one.utils.HtmlUtil;
 import com.fantasy.pf.one.utils.Utils;
+import com.tencent.smtt.sdk.WebSettings;
+import com.tencent.smtt.sdk.WebView;
+import com.tencent.smtt.sdk.WebViewClient;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -34,8 +39,8 @@ import cn.droidlover.xrichtext.XRichText;
 
 public class ReadDetailActivity extends MvpBaseActivity<ReadDetailPresenter> implements ReadDetailContract.View {
 
-    @BindView(R.id.rich_text)
-    XRichText mRichText;
+    @BindView(R.id.web_view)
+    WebView mWebView;
     @BindView(R.id.tv_detail_title)
     TextView tvDetailTitle;
     @BindView(R.id.tv_user_name)
@@ -87,14 +92,33 @@ public class ReadDetailActivity extends MvpBaseActivity<ReadDetailPresenter> imp
                 trim());
         tvDetailTitle.setText(mContentListBean.getTitle());
         tvUserName.setText(mContentListBean.getShareList().getWx().getDesc().split(" ")[0].trim());
+        initWebView();
         presenter.loadDetail(mContentListBean);
+    }
+
+    private void initWebView() {
+        WebSettings settings = mWebView.getSettings();
+        settings.setAppCacheEnabled(true);
+        settings.setDomStorageEnabled(true);
+        settings.setDatabaseEnabled(true);
+        settings.setCacheMode(WebSettings.LOAD_DEFAULT);
+        settings.setJavaScriptEnabled(true);
+        settings.setLoadWithOverviewMode(true);
+        settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+        settings.setSupportZoom(true);
+        mWebView.setWebViewClient(new WebViewClient(){
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
+                return true;
+            }
+        });
     }
 
     @Override
     public void showErrorMsg(String msg) {
 
     }
-
 
 //    @Override
 //    public void showContent(String content) {
@@ -131,25 +155,36 @@ public class ReadDetailActivity extends MvpBaseActivity<ReadDetailPresenter> imp
     @SuppressLint("SetTextI18n")
     @Override
     public void showReadData(ReadDetailBean readDetailBean) {
-        mRichText.callback(new XRichText.BaseClickCallback() {
-            @Override
-            public void onFix(XRichText.ImageHolder holder) {
-                super.onFix(holder);
-                // 设置宽高
-                holder.setWidth(mRichText.getWidth());
-                int height = mBitmap.getHeight() * (mRichText.getWidth() / mBitmap.getWidth());
-                holder.setHeight(height < 800 ? 800 : height);
-            }
-        })
-                .imageDownloader(new ImageLoader() {
-                    @Override
-                    public Bitmap getBitmap(String url) throws IOException {
-                        mBitmap = OneApplication.getImageLoader(ReadDetailActivity.this).loadImageSync(url);
-                        return mBitmap;
-                    }
-                })
-                .text(readDetailBean.getHpContent().split("</head>")[1].replace(
-                "\\s", "")); // 去除头
+//        mRichText.callback(new XRichText.BaseClickCallback() {
+//            @Override
+//            public void onFix(XRichText.ImageHolder holder) {
+//                super.onFix(holder);
+//                // 设置宽高
+//                holder.setWidth(mRichText.getWidth());
+//                int height = mBitmap.getHeight() * (mRichText.getWidth() / mBitmap.getWidth());
+//                holder.setHeight(height < 800 ? 800 : height);
+//            }
+//        })
+//                .imageDownloader(new ImageLoader() {
+//                    @Override
+//                    public Bitmap getBitmap(String url) throws IOException {
+//                        mBitmap = OneApplication.getImageLoader(ReadDetailActivity.this).loadImageSync(url);
+//                        return mBitmap;
+//                    }
+//                })
+//                .text(readDetailBean.getHpContent().split("</head>")[1].replace(
+//                "\\s", "")); // 去除头
+
+        List<String> list = new ArrayList<>();
+        list.add("http://resource.wufazhuce.com/one.css?v=4.3.1");
+        List<String> list1 = new ArrayList<>();
+        list1.add("http://resource.wufazhuce.com/one-zepto.min.js");
+        list1.add("http://resource.wufazhuce.com/one-vue.min.js");
+        list1.add("http://resource.wufazhuce.com/one-webview.js?v=4.3.1");
+
+        String htmlData = HtmlUtil.createHtmlData(readDetailBean.getHpContent(),list,list1);
+        mWebView.loadData(htmlData,HtmlUtil.MIME_TYPE,HtmlUtil.ENCODING);
+
 
         tvIntroduce.setText(readDetailBean.getHpAuthorIntroduce() + " " + readDetailBean.getEditorEmail());
 
