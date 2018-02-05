@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -13,6 +14,7 @@ import com.fantasy.pf.one.R;
 import com.fantasy.pf.one.application.OneApplication;
 import com.fantasy.pf.one.base.MvpBaseActivity;
 import com.fantasy.pf.one.model.bean.AuthorBean;
+import com.fantasy.pf.one.model.bean.CommentBean;
 import com.fantasy.pf.one.model.bean.ContentListBean;
 import com.fantasy.pf.one.model.bean.MovieDetailBean;
 import com.fantasy.pf.one.model.bean.MusicDetailBean;
@@ -30,7 +32,7 @@ import butterknife.ButterKnife;
 import cn.droidlover.xrichtext.ImageLoader;
 import cn.droidlover.xrichtext.XRichText;
 
-public class ReadDetailActivity extends MvpBaseActivity<ReadDetailPresenter> implements ReadDetailContract.View{
+public class ReadDetailActivity extends MvpBaseActivity<ReadDetailPresenter> implements ReadDetailContract.View {
 
     @BindView(R.id.rich_text)
     XRichText mRichText;
@@ -60,6 +62,8 @@ public class ReadDetailActivity extends MvpBaseActivity<ReadDetailPresenter> imp
 
     private ContentListBean mContentListBean;
 
+    private CommentAdapter mCommentAdapter;
+
     @Override
     public int getLayout() {
         return R.layout.activity_read_detail;
@@ -77,6 +81,7 @@ public class ReadDetailActivity extends MvpBaseActivity<ReadDetailPresenter> imp
 //        presenter.loadReadDetail(0);
 //        presenter.loadMovieDetail(0);
         initToolbar();
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         mContentListBean = (ContentListBean) getIntent().getSerializableExtra(Constants.ONE_LIST_BEAN);
         tvTitle.setText(mContentListBean.getShareList().getWx().getTitle().split("\\|")[0].
                 trim());
@@ -126,13 +131,13 @@ public class ReadDetailActivity extends MvpBaseActivity<ReadDetailPresenter> imp
     @SuppressLint("SetTextI18n")
     @Override
     public void showReadData(ReadDetailBean readDetailBean) {
-        mRichText.callback(new XRichText.BaseClickCallback(){
+        mRichText.callback(new XRichText.BaseClickCallback() {
             @Override
             public void onFix(XRichText.ImageHolder holder) {
                 super.onFix(holder);
                 // 设置宽高
                 holder.setWidth(mRichText.getWidth());
-                int height = mBitmap.getHeight() *(mRichText.getWidth() / mBitmap.getWidth());
+                int height = mBitmap.getHeight() * (mRichText.getWidth() / mBitmap.getWidth());
                 holder.setHeight(height < 800 ? 800 : height);
             }
         })
@@ -143,13 +148,14 @@ public class ReadDetailActivity extends MvpBaseActivity<ReadDetailPresenter> imp
                         return mBitmap;
                     }
                 })
-                .text(readDetailBean.getHpContent().split("</head>")[1]); // 去除头
+                .text(readDetailBean.getHpContent().split("</head>")[1].replace(
+                "\\s", "")); // 去除头
 
         tvIntroduce.setText(readDetailBean.getHpAuthorIntroduce() + " " + readDetailBean.getEditorEmail());
 
         AuthorBean authorBean = readDetailBean.getAuthor().get(0);
-        Utils.displayImage(this,authorBean.getWebUrl(),
-                ivAuthor,Utils.getImageOptions(R.mipmap.ic_launcher_round,360));
+        Utils.displayImage(this, authorBean.getWebUrl(),
+                ivAuthor, Utils.getImageOptions(R.mipmap.ic_launcher_round, 360));
 
         tvHpAuthor.setText(authorBean.getUserName() + " " + authorBean.getWbName());
         tvAuthIt.setText(authorBean.getDesc());
@@ -162,6 +168,13 @@ public class ReadDetailActivity extends MvpBaseActivity<ReadDetailPresenter> imp
 
     @Override
     public void showMusicData(MusicDetailBean readDetailBean) {
+
+    }
+
+    @Override
+    public void showReadComment(CommentBean commentBean) {
+        mCommentAdapter = new CommentAdapter(this,commentBean);
+        recyclerView.setAdapter(mCommentAdapter);
 
     }
 }

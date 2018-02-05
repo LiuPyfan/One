@@ -80,18 +80,17 @@
                 android:layout_below="@id/view_black"
                 android:layout_marginTop="@dimen/dp_16_y">
 
-                <include layout="@layout/author"/>
+                <include layout="@layout/author" />
 
             </RelativeLayout>
 
             <TextView
-               android:id="@+id/tv_recommend"
+                android:id="@+id/tv_recommend"
                 style="@style/main_tv"
                 android:layout_below="@id/layout_author"
                 android:paddingTop="@dimen/dp_26_y"
                 android:text="@string/comment_list"
-                android:textColor="@color/tv_reported"
-                />
+                android:textColor="@color/tv_reported" />
 
             <View
                 android:id="@+id/view_black1"
@@ -100,12 +99,12 @@
                 android:layout_marginTop="@dimen/dp_10_y" />
 
             <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/recycler_view"
                 android:layout_below="@id/view_black1"
                 android:layout_marginTop="@dimen/dp_24_y"
-                />
+                android:nestedScrollingEnabled="false" />
 
         </RelativeLayout>
     </android.support.v4.widget.NestedScrollView>

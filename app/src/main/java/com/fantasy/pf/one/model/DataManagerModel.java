@@ -1,5 +1,6 @@
 package com.fantasy.pf.one.model;
 
+import com.fantasy.pf.one.model.bean.CommentBean;
 import com.fantasy.pf.one.model.bean.MovieDetailBean;
 import com.fantasy.pf.one.model.bean.MusicDetailBean;
 import com.fantasy.pf.one.model.bean.OneIdBean;
@@ -45,6 +46,11 @@ public class DataManagerModel implements HttpHelper,DBHelper,PreferencesHelper {
     @Override
     public Flowable<MyHttpResponse<ReadDetailBean>> getReadDetail(String itemId) {
         return mHttpHelper.getReadDetail(itemId);
+    }
+
+    @Override
+    public Flowable<MyHttpResponse<CommentBean>> getReadCommentDetail(String itemId) {
+        return mHttpHelper.getReadCommentDetail(itemId);
     }
 
     @Override

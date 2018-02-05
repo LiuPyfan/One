@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.fantasy.pf.one.base.RxPresenter;
 import com.fantasy.pf.one.model.DataManagerModel;
+import com.fantasy.pf.one.model.bean.CommentBean;
 import com.fantasy.pf.one.model.bean.ContentListBean;
 import com.fantasy.pf.one.model.bean.MovieDetailBean;
 import com.fantasy.pf.one.model.bean.MusicDetailBean;
@@ -29,6 +30,7 @@ import io.reactivex.functions.Function;
 public class ReadDetailPresenter extends RxPresenter<ReadDetailContract.View> implements ReadDetailContract.Presenter {
     private static final String TAG = "ReadDetailPresenter";
     private DataManagerModel mDataManagerModel;
+
     // 无注解会找不到DaggerAppComponent,编译失败
     @Inject
     public ReadDetailPresenter(DataManagerModel dataManagerModel) {
@@ -39,22 +41,22 @@ public class ReadDetailPresenter extends RxPresenter<ReadDetailContract.View> im
     @Override
     public void loadReadDetail(String itemId) {
         addSubscribe(mDataManagerModel.getReadDetail(itemId)
-                .compose(RxUtil.<MyHttpResponse<ReadDetailBean>>rxSchedulerHelper())
-                .flatMap(new Function<MyHttpResponse<ReadDetailBean>, Publisher<ReadDetailBean>>() {
-                    @Override
-                    public Publisher<ReadDetailBean> apply(MyHttpResponse<ReadDetailBean> httpResponse) throws Exception {
-                        return Flowable.just(httpResponse.getData());
-                    }
-                })
-                .subscribeWith(new CommonSubscriber<ReadDetailBean>(view){
+                        .compose(RxUtil.<MyHttpResponse<ReadDetailBean>>rxSchedulerHelper())
+                        .flatMap(new Function<MyHttpResponse<ReadDetailBean>, Publisher<ReadDetailBean>>() {
+                            @Override
+                            public Publisher<ReadDetailBean> apply(MyHttpResponse<ReadDetailBean> httpResponse) throws Exception {
+                                return Flowable.just(httpResponse.getData());
+                            }
+                        })
+                        .subscribeWith(new CommonSubscriber<ReadDetailBean>(view) {
 
-                    @Override
-                    public void onNext(ReadDetailBean readDetailBean) {
+                            @Override
+                            public void onNext(ReadDetailBean readDetailBean) {
 //                        view.showContent(readDetailBean.getHpContent());
 //                        Log.d(TAG, readDetailBean.getHpContent());
-                        view.showReadData(readDetailBean);
-                    }
-                })
+                                view.showReadData(readDetailBean);
+                            }
+                        })
 
         );
     }
@@ -62,23 +64,23 @@ public class ReadDetailPresenter extends RxPresenter<ReadDetailContract.View> im
     @Override
     public void loadMovieDetail(String itemId) {
         addSubscribe(mDataManagerModel.getMovieDetail(itemId)
-                .compose(RxUtil.<MyHttpResponse<MovieDetailBean>>rxSchedulerHelper())
-                .flatMap(new Function<MyHttpResponse<MovieDetailBean>, Publisher<MovieDetailBean>>() {
-                    @Override
-                    public Publisher<MovieDetailBean> apply(MyHttpResponse<MovieDetailBean> response) throws Exception {
-                        return Flowable.just(response.getData());
-                    }
-                })
-                .subscribeWith(new CommonSubscriber<MovieDetailBean>(view){
+                        .compose(RxUtil.<MyHttpResponse<MovieDetailBean>>rxSchedulerHelper())
+                        .flatMap(new Function<MyHttpResponse<MovieDetailBean>, Publisher<MovieDetailBean>>() {
+                            @Override
+                            public Publisher<MovieDetailBean> apply(MyHttpResponse<MovieDetailBean> response) throws Exception {
+                                return Flowable.just(response.getData());
+                            }
+                        })
+                        .subscribeWith(new CommonSubscriber<MovieDetailBean>(view) {
 
-                    @Override
-                    public void onNext(MovieDetailBean movieDetailBean) {
+                            @Override
+                            public void onNext(MovieDetailBean movieDetailBean) {
 //                        view.showContent(movieDetailBean.getData().get(0).getContent());
 //                        Log.d(TAG,movieDetailBean.getData().get(0).getContent());
-                        view.showMovieData(movieDetailBean);
-                    }
+                                view.showMovieData(movieDetailBean);
+                            }
 
-                })
+                        })
 
         );
     }
@@ -86,22 +88,22 @@ public class ReadDetailPresenter extends RxPresenter<ReadDetailContract.View> im
     @Override
     public void loadMusicDetail(String itemId) {
         addSubscribe(mDataManagerModel.getMusicDetail(itemId)
-                    .compose(RxUtil.<MyHttpResponse<MusicDetailBean>>rxSchedulerHelper())
-                    .flatMap(new Function<MyHttpResponse<MusicDetailBean>, Publisher<MusicDetailBean>>() {
-                        @Override
-                        public Publisher<MusicDetailBean> apply(MyHttpResponse<MusicDetailBean> httpResponse) throws Exception {
-                            return Flowable.just(httpResponse.getData());
-                        }
-                    })
-                    .subscribeWith(new CommonSubscriber<MusicDetailBean>(view){
+                        .compose(RxUtil.<MyHttpResponse<MusicDetailBean>>rxSchedulerHelper())
+                        .flatMap(new Function<MyHttpResponse<MusicDetailBean>, Publisher<MusicDetailBean>>() {
+                            @Override
+                            public Publisher<MusicDetailBean> apply(MyHttpResponse<MusicDetailBean> httpResponse) throws Exception {
+                                return Flowable.just(httpResponse.getData());
+                            }
+                        })
+                        .subscribeWith(new CommonSubscriber<MusicDetailBean>(view) {
 
-                        @Override
-                        public void onNext(MusicDetailBean musicDetailBean) {
+                            @Override
+                            public void onNext(MusicDetailBean musicDetailBean) {
 //                            view.showContent(musicDetailBean.toString());
 //                            Log.d(TAG, musicDetailBean.toString());
-                            view.showMusicData(musicDetailBean);
-                        }
-                    })
+                                view.showMusicData(musicDetailBean);
+                            }
+                        })
 
         );
     }
@@ -109,7 +111,7 @@ public class ReadDetailPresenter extends RxPresenter<ReadDetailContract.View> im
     @Override
     public void loadDetail(ContentListBean contentListBean) {
         String itemId = contentListBean.getItemId();
-        switch(Integer.parseInt(contentListBean.getCategory())){
+        switch (Integer.parseInt(contentListBean.getCategory())) {
             case Constants.CATEGORY_MUSIC:
                 loadMovieDetail(itemId);
                 break;
@@ -118,8 +120,29 @@ public class ReadDetailPresenter extends RxPresenter<ReadDetailContract.View> im
                 break;
             default:
                 loadReadDetail(itemId);
+                loadReadComment(itemId);
                 break;
         }
+    }
+
+    @Override
+    public void loadReadComment(String itemId) {
+        addSubscribe(mDataManagerModel.getReadCommentDetail(itemId)
+                .compose(RxUtil.<MyHttpResponse<CommentBean>>rxSchedulerHelper())
+                .flatMap(new Function<MyHttpResponse<CommentBean>, Publisher<CommentBean>>() {
+                    @Override
+                    public Publisher<CommentBean> apply(MyHttpResponse<CommentBean> httpResponse) throws Exception {
+                        return Flowable.just(httpResponse.getData());
+                    }
+                })
+                .subscribeWith(new CommonSubscriber<CommentBean>(view) {
+
+                    @Override
+                    public void onNext(CommentBean commentBean) {
+                        view.showReadComment(commentBean);
+                    }
+                })
+        );
     }
 
 

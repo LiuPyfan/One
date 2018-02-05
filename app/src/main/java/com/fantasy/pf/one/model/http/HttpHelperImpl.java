@@ -1,5 +1,6 @@
 package com.fantasy.pf.one.model.http;
 
+import com.fantasy.pf.one.model.bean.CommentBean;
 import com.fantasy.pf.one.model.bean.MovieDetailBean;
 import com.fantasy.pf.one.model.bean.MusicDetailBean;
 import com.fantasy.pf.one.model.bean.OneIdBean;
@@ -42,6 +43,12 @@ public class HttpHelperImpl implements HttpHelper {
     public Flowable<MyHttpResponse<ReadDetailBean>> getReadDetail(String itemId) {
         return mOneApis.getReadDetail(itemId);
     }
+
+    @Override
+    public Flowable<MyHttpResponse<CommentBean>> getReadCommentDetail(String itemId) {
+        return mOneApis.getReadCommentDetail(itemId);
+    }
+
 
     @Override
     public Flowable<MyHttpResponse<MovieDetailBean>> getMovieDetail(String itemId) {

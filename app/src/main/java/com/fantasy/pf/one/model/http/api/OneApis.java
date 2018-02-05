@@ -2,6 +2,7 @@ package com.fantasy.pf.one.model.http.api;
 
 
 
+import com.fantasy.pf.one.model.bean.CommentBean;
 import com.fantasy.pf.one.model.bean.MovieDetailBean;
 import com.fantasy.pf.one.model.bean.MusicDetailBean;
 import com.fantasy.pf.one.model.bean.OneIdBean;
@@ -40,10 +41,10 @@ public interface OneApis {
     @GET("essay/{item_id}" + END)
     Flowable<MyHttpResponse<ReadDetailBean>> getReadDetail(@Path("item_id") String itemId);
 
-//    //获取文章的评论信息
-//    @GET("comment/praiseandtime/essay/{item_id}/0" + END)
-//    Flowable<MyHttpResponse<CommentBean>> geReadCommentDetail(@Path("item_id") String itemId);
-//
+    //获取文章的评论信息
+    @GET("comment/praiseandtime/essay/{item_id}/0" + END)
+    Flowable<MyHttpResponse<CommentBean>> getReadCommentDetail(@Path("item_id") String itemId);
+
     //获取影视详细信息
     @GET("movie/{item_id}/story/1/0" + END)
     Flowable<MyHttpResponse<MovieDetailBean>> getMovieDetail(@Path("item_id") String itemId);
