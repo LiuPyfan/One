@@ -8,6 +8,6 @@
         android:topRightRadius="@dimen/dp_2_y"/>
     <stroke
         android:width="2px"
-        android:color="@color/tv_hint"/>
+        android:color="@color/main_text_color"/>
     <solid android:color="@android:color/white"/>
 </shape>

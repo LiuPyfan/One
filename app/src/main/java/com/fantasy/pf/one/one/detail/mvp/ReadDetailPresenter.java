@@ -120,6 +120,10 @@ public class ReadDetailPresenter extends RxPresenter<ReadDetailContract.View> im
                 break;
             default:
                 loadReadDetail(itemId);
+                /*
+                根据 http://v3.wufazhuce.com:8000/api/onelist/4675/0 中itemId的数值（如1999）得到
+                http://v3.wufazhuce.com:8000/api/comment/praiseandtime/essay/1999/0
+                */
                 loadReadComment(itemId);
                 break;
         }

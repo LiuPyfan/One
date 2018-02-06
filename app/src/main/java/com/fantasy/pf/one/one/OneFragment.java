@@ -193,6 +193,7 @@ public class OneFragment extends MvpBaseFragment<OnePresenter> implements Refres
 
     @Override
     public void onItemClick(int position) {
+        // http://v3.wufazhuce.com:8000/api/onelist/4675/0     category	"2"
         ContentListBean contentListBean = mOneAdapter.getContentList().get(position);
         switch(Integer.parseInt(contentListBean.getCategory())){
             case Constants.CATEGORY_REPORTER:

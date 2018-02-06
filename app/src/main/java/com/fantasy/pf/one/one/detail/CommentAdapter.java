@@ -3,10 +3,12 @@ package com.fantasy.pf.one.one.detail;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.fantasy.pf.one.R;
@@ -43,10 +45,17 @@ public class CommentAdapter extends RecyclerView.Adapter <CommentAdapter.Comment
     @Override
     public void onBindViewHolder(CommentViewHolder holder, int position) {
         CommentBean.DataBean dataBean = mCommentBean.getData().get(position);
-        Utils.displayImage(mContext,dataBean.getUser().getWeb_url(),holder.ivUser,
+        Utils.displayImage(mContext,dataBean.getUser().getWebUrl(),holder.ivUser,
                 Utils.getImageOptions(R.mipmap.ic_launcher_round,360));
         holder.tvUserName.setText(dataBean.getUser().getUserName());
         holder.tvCreatedAt.setText(dataBean.getCreatedAt());
+
+        if (TextUtils.isEmpty(dataBean.getQuote())){
+            holder.layoutQuote.setVisibility(View.GONE);
+        }else {
+            holder.layoutQuote.setVisibility(View.VISIBLE);
+            holder.tvQuote.setText(dataBean.getTouser().getUserName() + ": " + dataBean.getQuote());
+        }
         holder.tvContent.setText(dataBean.getContent());
         holder.tvPraiseNum.setText(dataBean.getPraisenum() + "");
     }
@@ -67,6 +76,10 @@ public class CommentAdapter extends RecyclerView.Adapter <CommentAdapter.Comment
         TextView tvContent;
         @BindView(R.id.tv_praise_num)
         TextView tvPraiseNum;
+        @BindView(R.id.tv_quote)
+        TextView tvQuote;
+        @BindView(R.id.layout_quote)
+        RelativeLayout layoutQuote;
 
         public CommentViewHolder(View itemView){
             super(itemView);
