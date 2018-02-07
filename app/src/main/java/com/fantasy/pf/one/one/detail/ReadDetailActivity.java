@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -68,6 +69,14 @@ public class ReadDetailActivity extends MvpBaseActivity<ReadDetailPresenter> imp
     RecyclerView recyclerView;
     @BindView(R.id.layout_bottom)
     RelativeLayout layoutBottom;
+    @BindView(R.id.layout_bottom2)
+    RelativeLayout layoutBottom2;
+    @BindView(R.id.tv_like_num)
+    TextView tvLikeNum;
+    @BindView(R.id.tv_comment_num)
+    TextView tvCommentNum;
+    @BindView(R.id.nsv_scroller)
+    NestedScrollView nsvScroller;
 
     // 图文混排 图片
     Bitmap mBitmap;
@@ -76,6 +85,8 @@ public class ReadDetailActivity extends MvpBaseActivity<ReadDetailPresenter> imp
     private ContentListBean mContentListBean;
 
     private CommentAdapter mCommentAdapter;
+
+    private boolean mIsBottomShow = true;
 
     @Override
     public int getLayout() {
@@ -89,6 +100,7 @@ public class ReadDetailActivity extends MvpBaseActivity<ReadDetailPresenter> imp
     }
 
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void init() {
 //        presenter.loadReadDetail(0);
@@ -101,11 +113,33 @@ public class ReadDetailActivity extends MvpBaseActivity<ReadDetailPresenter> imp
                 trim());
         tvDetailTitle.setText(mContentListBean.getTitle());
         tvUserName.setText(mContentListBean.getShareList().getWx().getDesc().split(" ")[0].trim());
+
+        tvLikeNum.setText(mContentListBean.getLikeCount() + "");
+
         initWebView();
         presenter.loadDetail(mContentListBean);
+        // 评论栏状态动画监听
+        initListener();
+    }
+    // 评论栏状态动画监听
+    private void initListener(){
+        nsvScroller.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+
+                if (scrollY - oldScrollY > 0 && mIsBottomShow){ // 下移隐藏
+                    mIsBottomShow = false;
+                    layoutBottom2.animate().translationY(layoutBottom2.getHeight());
+                }else if (scrollY - oldScrollY < 0 && !mIsBottomShow){ // 上移出现
+                    mIsBottomShow = true;
+                    layoutBottom2.animate().translationY(0);
+
+                }
+            }
+        });
     }
 
-    private void initAnim(){
+    private void initAnim() {
         ivLoading.setImageResource(R.drawable.web_view_loading);
         mAnimationDrawable = (AnimationDrawable) ivLoading.getDrawable();
         mAnimationDrawable.start();
@@ -121,7 +155,7 @@ public class ReadDetailActivity extends MvpBaseActivity<ReadDetailPresenter> imp
         settings.setLoadWithOverviewMode(true);
         settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
         settings.setSupportZoom(true);
-        mWebView.setWebViewClient(new WebViewClient(){
+        mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 view.loadUrl(url);
@@ -203,8 +237,8 @@ public class ReadDetailActivity extends MvpBaseActivity<ReadDetailPresenter> imp
         list1.add(Constants.ONE_DETAIL_JS2);
         list1.add(Constants.ONE_DETAIL_JS3);
 
-        String htmlData = HtmlUtil.createHtmlData(readDetailBean.getHpContent(),list,list1);
-        mWebView.loadData(htmlData,HtmlUtil.MIME_TYPE,HtmlUtil.ENCODING);
+        String htmlData = HtmlUtil.createHtmlData(readDetailBean.getHpContent(), list, list1);
+        mWebView.loadData(htmlData, HtmlUtil.MIME_TYPE, HtmlUtil.ENCODING);
 
 
         tvIntroduce.setText(readDetailBean.getHpAuthorIntroduce() + " " + readDetailBean.getEditorEmail());
@@ -217,7 +251,7 @@ public class ReadDetailActivity extends MvpBaseActivity<ReadDetailPresenter> imp
         tvAuthIt.setText(authorBean.getDesc());
     }
 
-    private void stopAnim(){
+    private void stopAnim() {
         mAnimationDrawable.stop();
         layoutBottom.setVisibility(View.VISIBLE);
         ivLoading.setVisibility(View.GONE);
@@ -233,10 +267,12 @@ public class ReadDetailActivity extends MvpBaseActivity<ReadDetailPresenter> imp
 
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void showReadComment(CommentBean commentBean) {
-        mCommentAdapter = new CommentAdapter(this,commentBean);
+        mCommentAdapter = new CommentAdapter(this, commentBean);
         recyclerView.setAdapter(mCommentAdapter);
+        tvCommentNum.setText(commentBean.getCount()+"");
 
     }
 }
