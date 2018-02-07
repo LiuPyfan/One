@@ -3,11 +3,14 @@ package com.fantasy.pf.one.one.detail;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.fantasy.pf.one.R;
@@ -53,6 +56,8 @@ public class ReadDetailActivity extends MvpBaseActivity<ReadDetailPresenter> imp
     TextView tvAuthor;
     @BindView(R.id.iv_author)
     ImageView ivAuthor;
+    @BindView(R.id.iv_loading)
+    ImageView ivLoading;
     @BindView(R.id.tv_hp_author)
     TextView tvHpAuthor;
     @BindView(R.id.tv_auth_it)
@@ -61,9 +66,12 @@ public class ReadDetailActivity extends MvpBaseActivity<ReadDetailPresenter> imp
     TextView tvRecommend;
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
+    @BindView(R.id.layout_bottom)
+    RelativeLayout layoutBottom;
 
     // 图文混排 图片
     Bitmap mBitmap;
+    private AnimationDrawable mAnimationDrawable;
 
     private ContentListBean mContentListBean;
 
@@ -85,6 +93,7 @@ public class ReadDetailActivity extends MvpBaseActivity<ReadDetailPresenter> imp
     public void init() {
 //        presenter.loadReadDetail(0);
 //        presenter.loadMovieDetail(0);
+        initAnim();
         initToolbar();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         mContentListBean = (ContentListBean) getIntent().getSerializableExtra(Constants.ONE_LIST_BEAN);
@@ -94,6 +103,12 @@ public class ReadDetailActivity extends MvpBaseActivity<ReadDetailPresenter> imp
         tvUserName.setText(mContentListBean.getShareList().getWx().getDesc().split(" ")[0].trim());
         initWebView();
         presenter.loadDetail(mContentListBean);
+    }
+
+    private void initAnim(){
+        ivLoading.setImageResource(R.drawable.web_view_loading);
+        mAnimationDrawable = (AnimationDrawable) ivLoading.getDrawable();
+        mAnimationDrawable.start();
     }
 
     private void initWebView() {
@@ -111,6 +126,12 @@ public class ReadDetailActivity extends MvpBaseActivity<ReadDetailPresenter> imp
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 view.loadUrl(url);
                 return true;
+            }
+
+            @Override
+            public void onPageFinished(WebView webView, String s) {
+                super.onPageFinished(webView, s);
+                stopAnim();
             }
         });
     }
@@ -176,11 +197,11 @@ public class ReadDetailActivity extends MvpBaseActivity<ReadDetailPresenter> imp
 //                "\\s", "")); // 去除头
 
         List<String> list = new ArrayList<>();
-        list.add("http://resource.wufazhuce.com/one.css?v=4.3.1");
+        list.add(Constants.ONE_DETAIL_CSS);
         List<String> list1 = new ArrayList<>();
-//        list1.add("http://resource.wufazhuce.com/one-zepto.min.js");
-//        list1.add("http://resource.wufazhuce.com/one-vue.min.js");
-//        list1.add("http://resource.wufazhuce.com/one-webview.js?v=4.3.1");
+        list1.add(Constants.ONE_DETAIL_JS1);
+        list1.add(Constants.ONE_DETAIL_JS2);
+        list1.add(Constants.ONE_DETAIL_JS3);
 
         String htmlData = HtmlUtil.createHtmlData(readDetailBean.getHpContent(),list,list1);
         mWebView.loadData(htmlData,HtmlUtil.MIME_TYPE,HtmlUtil.ENCODING);
@@ -194,6 +215,12 @@ public class ReadDetailActivity extends MvpBaseActivity<ReadDetailPresenter> imp
 
         tvHpAuthor.setText(authorBean.getUserName() + " " + authorBean.getWbName());
         tvAuthIt.setText(authorBean.getDesc());
+    }
+
+    private void stopAnim(){
+        mAnimationDrawable.stop();
+        layoutBottom.setVisibility(View.VISIBLE);
+        ivLoading.setVisibility(View.GONE);
     }
 
     @Override
