@@ -121,19 +121,26 @@ public class ReadDetailActivity extends MvpBaseActivity<ReadDetailPresenter> imp
         // 评论栏状态动画监听
         initListener();
     }
+
     // 评论栏状态动画监听
-    private void initListener(){
+    private void initListener() {
         nsvScroller.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
 
-                if (scrollY - oldScrollY > 0 && mIsBottomShow){ // 下移隐藏
+                if (scrollY - oldScrollY > 0 && mIsBottomShow) { // 下移隐藏
                     mIsBottomShow = false;
                     layoutBottom2.animate().translationY(layoutBottom2.getHeight());
-                }else if (scrollY - oldScrollY < 0 && !mIsBottomShow){ // 上移出现
+                    tvTitle.setText(tvDetailTitle.getText().toString());
+                } else if (scrollY - oldScrollY < 0 && !mIsBottomShow) { // 上移出现
                     mIsBottomShow = true;
                     layoutBottom2.animate().translationY(0);
 
+                }
+
+                if (scrollY == 0 && mIsBottomShow) {
+                    tvTitle.setText(mContentListBean.getShareList().getWx().getTitle().split(
+                            "\\|")[0].trim());
                 }
             }
         });
@@ -210,26 +217,11 @@ public class ReadDetailActivity extends MvpBaseActivity<ReadDetailPresenter> imp
     @SuppressLint("SetTextI18n")
     @Override
     public void showReadData(ReadDetailBean readDetailBean) {
-//        mRichText.callback(new XRichText.BaseClickCallback() {
-//            @Override
-//            public void onFix(XRichText.ImageHolder holder) {
-//                super.onFix(holder);
-//                // 设置宽高
-//                holder.setWidth(mRichText.getWidth());
-//                int height = mBitmap.getHeight() * (mRichText.getWidth() / mBitmap.getWidth());
-//                holder.setHeight(height < 800 ? 800 : height);
-//            }
-//        })
-//                .imageDownloader(new ImageLoader() {
-//                    @Override
-//                    public Bitmap getBitmap(String url) throws IOException {
-//                        mBitmap = OneApplication.getImageLoader(ReadDetailActivity.this).loadImageSync(url);
-//                        return mBitmap;
-//                    }
-//                })
-//                .text(readDetailBean.getHpContent().split("</head>")[1].replace(
-//                "\\s", "")); // 去除头
+        showContent(readDetailBean.getHpContent(),readDetailBean.getHpAuthorIntroduce() + " " + readDetailBean.getEditorEmail(),readDetailBean.getAuthor().get(0));
+    }
 
+    @SuppressLint("SetTextI18n")
+    private void showContent(String hpContent, String sIntroduce, AuthorBean authorBean) {
         List<String> list = new ArrayList<>();
         list.add(Constants.ONE_DETAIL_CSS);
         List<String> list1 = new ArrayList<>();
@@ -237,19 +229,18 @@ public class ReadDetailActivity extends MvpBaseActivity<ReadDetailPresenter> imp
         list1.add(Constants.ONE_DETAIL_JS2);
         list1.add(Constants.ONE_DETAIL_JS3);
 
-        String htmlData = HtmlUtil.createHtmlData(readDetailBean.getHpContent(), list, list1);
+        String htmlData = HtmlUtil.createHtmlData(hpContent, list, list1);
         mWebView.loadData(htmlData, HtmlUtil.MIME_TYPE, HtmlUtil.ENCODING);
 
+        tvIntroduce.setText(sIntroduce);
 
-        tvIntroduce.setText(readDetailBean.getHpAuthorIntroduce() + " " + readDetailBean.getEditorEmail());
-
-        AuthorBean authorBean = readDetailBean.getAuthor().get(0);
         Utils.displayImage(this, authorBean.getWebUrl(),
                 ivAuthor, Utils.getImageOptions(R.mipmap.ic_launcher_round, 360));
-
         tvHpAuthor.setText(authorBean.getUserName() + " " + authorBean.getWbName());
+        layoutBottom.setVisibility(View.VISIBLE);
         tvAuthIt.setText(authorBean.getDesc());
     }
+
 
     private void stopAnim() {
         mAnimationDrawable.stop();
@@ -258,12 +249,13 @@ public class ReadDetailActivity extends MvpBaseActivity<ReadDetailPresenter> imp
     }
 
     @Override
-    public void showMovieData(MovieDetailBean readDetailBean) {
-
+    public void showMovieData(MovieDetailBean movieDetailBean) {
+        MovieDetailBean.DataBean dataBean = movieDetailBean.getData().get(0);
+        showContent(dataBean.getContent(),dataBean.getChargeEdt() + " " + dataBean.getEditorEmail(),dataBean.getUser());
     }
 
     @Override
-    public void showMusicData(MusicDetailBean readDetailBean) {
+    public void showMusicData(MusicDetailBean musicDetailBean) {
 
     }
 
@@ -272,7 +264,7 @@ public class ReadDetailActivity extends MvpBaseActivity<ReadDetailPresenter> imp
     public void showReadComment(CommentBean commentBean) {
         mCommentAdapter = new CommentAdapter(this, commentBean);
         recyclerView.setAdapter(mCommentAdapter);
-        tvCommentNum.setText(commentBean.getCount()+"");
+        tvCommentNum.setText(commentBean.getCount() + "");
 
     }
 }

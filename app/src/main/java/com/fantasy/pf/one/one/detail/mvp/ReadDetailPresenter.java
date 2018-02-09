@@ -113,10 +113,10 @@ public class ReadDetailPresenter extends RxPresenter<ReadDetailContract.View> im
         String itemId = contentListBean.getItemId();
         switch (Integer.parseInt(contentListBean.getCategory())) {
             case Constants.CATEGORY_MUSIC:
-                loadMovieDetail(itemId);
+                loadMusicDetail(itemId);
                 break;
             case Constants.CATEGORY_MOVIE:
-                loadMusicDetail(itemId);
+                loadMovieDetail(itemId);
                 break;
             default:
                 loadReadDetail(itemId);
@@ -124,9 +124,10 @@ public class ReadDetailPresenter extends RxPresenter<ReadDetailContract.View> im
                 根据 http://v3.wufazhuce.com:8000/api/onelist/4675/0 中itemId的数值（如1999）得到
                 http://v3.wufazhuce.com:8000/api/comment/praiseandtime/essay/1999/0
                 */
-                loadReadComment(itemId);
                 break;
         }
+        loadReadComment(itemId);
+
     }
 
     @Override
